@@ -1,0 +1,49 @@
+{% extends "base_bootstrap.html" %}
+
+{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+  <title>BlueSchool - Your School's Name</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  
+  <style>
+    body {
+      background-color: #5f7997; /* Blue background */
+    }
+  </style>
+</head>
+
+<body>
+<br><br>
+
+<!-- Header -->
+<header class="w3-display-container w3-content w3-wide" style="max-width:1600px;min-width:500px;" id="home">
+  <div class="w3-display-middle w3-margin-top w3-center">
+    <h1 class="w3-xxlarge w3-text-white"><span class="w3-padding w3-black w3-opacity-min"><b>Blue</b></span> <span class="w3-hide-small w3-text-light-grey">School</span></h1>
+  </div>
+</header>
+
+
+  <!-- About section -->
+  <div class="w3-container w3-padding-32" id="about">
+    <h3 class="w3-border-bottom w3-border-light-grey w3-padding-16">About Us</h3>
+    <p>Welcome to BlueSchool! We are a modern and innovative school that strives to provide our students with the best education possible. Our experienced teachers are passionate about teaching and are dedicated to helping our students succeed.</p>
+    <p>We offer a wide range of courses and programs that cater to the needs of our diverse student body. Whether you are interested in science, humanities, or the arts, we have something for you.</p>
+  </div>
+  <div>
+	<hr style="border: none; border-top: 1px solid #fff;">
+  <p>Please login to continue:</p>
+  <form method="post">
+	  {% csrf_token %}
+	  <label for="username">Username:</label>
+	  <input type="text" id="username" name="username" required>
+	  <label for="password">Password:</label>
+	  <input type="password" id="password" name="password" required>
+	  <button type="submit">Login</button>
+  </form>
+</div>
+
+{% endblock %}
+

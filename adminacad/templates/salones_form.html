@@ -1,0 +1,13 @@
+{% extends "base_bootstrap.html" %}
+
+{% block content %}
+  <h1>{% if request.resolver_match.url_name == 'course_create' %}Create New Course{% else %}Update Course{% endif %}</h1>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_table }}
+    <button type="submit class="btn btn-primary">{% if request.resolver_match.url_name == 'course_create' %}Create{% else %}Update{% endif %} Course</button>
+  </form>
+  <br>
+
+  <a href="{% url 'salones_list' %}" class="btn btn-primary">Return to Salones</a>
+{% endblock %}

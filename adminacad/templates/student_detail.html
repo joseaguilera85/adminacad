@@ -1,0 +1,44 @@
+{% extends "base_bootstrap.html" %}
+
+{% block content %}
+  <h1>Student Details</h1>
+  <table>
+    <table class="table table-striped">
+    <tr>
+      <td><strong>Name:</strong></td>
+      <td>{{ student.nombre_est }} {{ student.apellido_est }}</td>
+    </tr>
+    <tr>
+      <td><strong>Identification:</strong></td>
+      <td>{{ student.identificacion }}</td>
+    </tr>
+    <tr>
+      <td><strong>Grade:</strong></td>
+      <td>{{ student.grado }}</td>
+    </tr>
+  </table>
+  <br>
+  <h2>Materias</h2>
+  <table>
+    <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Clave Materia</th>
+        <th>Grado</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for materia in student.grado.materias_set.all %}
+        <tr>
+          <td>{{ materia.nombre_materia }}</td>
+          <td>{{ materia.clave_materia }}</td>
+          <td>{{ materia.grado }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <a href="{% url 'index' %}" class="btn btn-primary">Return to Index</a>
+  <a href="{% url 'student_list' %}" class="btn btn-primary">Return to Student List</a>
+{% endblock %}
+

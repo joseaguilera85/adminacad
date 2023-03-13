@@ -1,0 +1,17 @@
+{% extends "base_bootstrap.html" %}
+
+{% block content %}
+  <h1>{{ materias.nombre }}</h1>
+  <p>Clave Materia: {{ materias.clave_materia }}</p>
+  <p>Grado: {{ materias.grado }}</p>
+  <h2>Estudiantes inscritos</h2>
+  <ul>
+    {% for materia in student.grado.materias_set.all %}
+      <li>{{ materia.clave_materia }}</li>
+    {% empty %}
+      <li>No hay estudiantes inscritos en esta materia.</li>
+    {% endfor %}
+  </ul>
+  <a href="{% url 'materias_edit' pk=materias.pk %}" class="btn btn-primary">Editar</a>
+  <a href="{% url 'materias_delete' pk=materias.pk %}" class="btn btn-danger">Eliminar</a>
+{% endblock %}

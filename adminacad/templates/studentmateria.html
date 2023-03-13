@@ -1,0 +1,112 @@
+{% extends "base_bootstrap.html" %}
+
+{% block content %}
+  {% if materia %}
+    <h1>{{ materia.nombre_materia }}</h1>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">Estudiante</th>
+          <th scope="col">Materia</th>
+          <th scope="col">Calificación 1B</th>
+          <th scope="col">Calificación 2B</th>
+          <th scope="col">Calificación 3B</th>
+          <th scope="col">Calificación 4B</th>
+          <th scope="col">Calificación 5B</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for student in students %}
+          <tr>
+            <th scope="row">{{ student.identificacion }}</th>
+            <td>{{ student.nombre_est }} {{ student.apellido_est }}</td>
+            <td>{{ materia.nombre_materia }}</td>
+            <td>
+              {% for calificacion in student.calificacion_set.all %}
+                {% if calificacion.materia.nombre_materia == materia.nombre_materia %}
+                  {% if calificacion.calif_1B is None %}
+                    <a href="{% url 'calificacion_new' %}?materia={{ materia.pk }}&estudiante={{ student.pk }}&bimestre=1" class="btn btn-success btn-sm">Nueva calificación</a>
+                  {% else %}
+                    <a href="{% url 'calificacion_edit' pk=calificacion.pk %}" class="btn btn-primary btn-sm">Editar</a>
+                  {% endif %}
+                  {{ calificacion.calif_1B }}
+                {% endif %}
+              {% empty %}
+                <a href="{% url 'calificacion_new' %}?materia={{ materia.pk }}&estudiante={{ student.pk }}&bimestre=1" class="btn btn-success btn-sm">Nueva calificación</a>
+              {% endfor %}
+            </td>
+            <td>
+              {% for calificacion in student.calificacion_set.all %}
+                {% if calificacion.materia.nombre_materia == materia.nombre_materia %}
+                  {% if calificacion.calif_2B is None %}
+                    <a href="{% url 'calificacion_new' %}?materia={{ materia.pk }}&estudiante={{ student.pk }}&bimestre=1" class="btn btn-success btn-sm">Nueva calificación</a>
+                  {% else %}
+                    <a href="{% url 'calificacion_edit' pk=calificacion.pk %}" class="btn btn-primary btn-sm">Editar</a>
+                  {% endif %}
+                  {{ calificacion.calif_2B }}
+                {% endif %}
+              {% empty %}
+                <a href="{% url 'calificacion_new' %}?materia={{ materia.pk }}&estudiante={{ student.pk }}&bimestre=1" class="btn btn-success btn-sm">Nueva calificación</a>
+              {% endfor %}
+            </td>
+            <td>
+              {% for calificacion in student.calificacion_set.all %}
+                {% if calificacion.materia.nombre_materia == materia.nombre_materia %}
+                  {% if calificacion.calif_3B is None %}
+                    <a href="{% url 'calificacion_new' %}?materia={{ materia.pk }}&estudiante={{ student.pk }}&bimestre=1" class="btn btn-success btn-sm">Nueva calificación</a>
+                  {% else %}
+                    <a href="{% url 'calificacion_edit' pk=calificacion.pk %}" class="btn btn-primary btn-sm">Editar</a>
+                  {% endif %}
+                  {{ calificacion.calif_3B }}
+                {% endif %}
+              {% empty %}
+                <a href="{% url 'calificacion_new' %}?materia={{ materia.pk }}&estudiante={{ student.pk }}&bimestre=1" class="btn btn-success btn-sm">Nueva calificación</a>
+              {% endfor %}
+            </td>
+            <td>
+              {% for calificacion in student.calificacion_set.all %}
+                {% if calificacion.materia.nombre_materia == materia.nombre_materia %}
+                  {% if calificacion.calif_4B is None %}
+                    <a href="{% url 'calificacion_new' %}?materia={{ materia.pk }}&estudiante={{ student.pk }}&bimestre=1" class="btn btn-success btn-sm">Nueva calificación</a>
+                  {% else %}
+                    <a href="{% url 'calificacion_edit' pk=calificacion.pk %}" class="btn btn-primary btn-sm">Editar</a>
+                  {% endif %}
+                  {{ calificacion.calif_4B }}
+                {% endif %}
+              {% empty %}
+                <a href="{% url 'calificacion_new' %}?materia={{ materia.pk }}&estudiante={{ student.pk }}&bimestre=1" class="btn btn-success btn-sm">Nueva calificación</a>
+              {% endfor %}
+            </td>
+            <td>
+              {% for calificacion in student.calificacion_set.all %}
+                {% if calificacion.materia.nombre_materia == materia.nombre_materia %}
+                  {% if calificacion.calif_5B is None %}
+                    <a href="{% url 'calificacion_new' %}?materia={{ materia.pk }}&estudiante={{ student.pk }}&bimestre=1" class="btn btn-success btn-sm">Nueva calificación</a>
+                  {% else %}
+                    <a href="{% url 'calificacion_edit' pk=calificacion.pk %}" class="btn btn-primary btn-sm">Editar</a>
+                  {% endif %}
+                  {{ calificacion.calif_5B }}
+                {% endif %}
+              {% empty %}
+                <a href="{% url 'calificacion_new' %}?materia={{ materia.pk }}&estudiante={{ student.pk }}&bimestre=1" class="btn btn-success btn-sm">Nueva calificación</a>
+              {% endfor %}
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="9">No hay estudiantes disponibles.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <a href="{% url 'materias_list' %}" class="btn btn-primary">Return to materias list</a>
+    <br>
+  {% else %}
+    <p>No se ha seleccionado ninguna materia.</p>
+    <a href="{% url 'materias_list' %}" class="btn btn-primary">Volver a la lista de materias</a>
+  {% endif %}
+
+
+
+{% endblock %}
