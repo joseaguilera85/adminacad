@@ -1,0 +1,119 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block head %}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Header Section -->
+    <div class="d-flex justify-content-between align-items-center mt-4">
+        <h2>Directorio de Clientes</h2>
+        <form method="GET" class="d-flex">
+            <input type="text" name="search" class="form-control me-2 custom-input" placeholder="Search clients..." value="{{ request.GET.search }}">
+            <button type="submit" class="btn custom-brown-btn">Search</button>
+        </form>
+    </div>
+    <div>
+        <a href="{% url 'clientes:clientes_home' %}" class="btn custom-brown-btn btn-sm">Return to Home</a>
+    </div>
+
+    <!-- Client Table -->
+    <table class="table table-bordered mt-3">
+        <thead class="table-light">
+            <tr>
+                <th>Name</th>
+                <th>Apellido</th>
+                <th>Age</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th>Status</th>
+                <th>Proyecto</th>
+                <th>Property Type</th>
+                <th>Last Interaction</th>
+                <th>Days Since Last Interaction</th>
+                <th>Interaction Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for client in page_obj %}
+            <tr>
+                <td>{{ client.nombre }}</td>
+                <td>{{ client.apellido }}</td>
+                <td>{{ client.edad }}</td>
+                <td>{{ client.celular }}</td>
+                <td>{{ client.mail }}</td>
+                <td>{{ client.estatus }}</td>
+                <td>{{ client.project }}</td>
+                <td>{{ client.tipo_propiedad }}</td>
+
+                <!-- Last Interaction -->
+                <td>
+                    {{ client.last_interaction|default:"No Interaction" }}
+                </td>
+
+                <!-- Days Since Last Interaction -->
+                <td>
+                    {{ client.days_since_last_interaction|default:"N/A" }}
+                </td>
+
+                <!-- Interaction Status -->
+                <td>
+                    {{ client.interaction_status }}
+                </td>
+
+                <td>
+                    <a href="{% url 'clientes:client_detail' client.id_cliente %}" class="btn custom-brown-btn btn-sm">Details</a>
+                    <form method="POST" action="{% url 'clientes:delete_client' client.id_cliente %}" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="12" class="text-center">No clients found</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Pagination -->
+    <nav>
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">First</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">Previous</a>
+                </li>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                    <li class="page-item active">
+                        <span class="page-link">{{ num }}</span>
+                    </li>
+                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ num }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">{{ num }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">Next</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">Last</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
+<link rel="stylesheet" href="{% static 'clientes/css/styles.css' %}">
+{% endblock %}

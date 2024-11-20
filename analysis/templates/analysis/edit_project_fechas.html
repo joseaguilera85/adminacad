@@ -1,0 +1,15 @@
+{% extends "base_bootstrap.html" %}
+
+{% block title %}Edit Project Cost{% endblock %}
+
+{% block content %}
+    <h1>Edit Project: {{ project_cost.project.name }}</h1>  <!-- Use the single project_cost object -->
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        
+        <button type="submit" class="btn btn-success">Save Changes</button>
+        <a href="{% url 'analysis:analysis_home' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+{% endblock %}

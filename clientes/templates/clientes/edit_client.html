@@ -1,0 +1,14 @@
+{% extends "base_dashboard.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Edit Client: {{ client.nombre }}</h1>
+    <a href="{% url 'clientes:client_detail' client.id_cliente %}" class="btn btn-secondary mb-3">Back to Details</a>
+
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}  <!-- Render the form fields as paragraphs -->
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+    </form>
+</div>
+{% endblock %}

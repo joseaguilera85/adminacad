@@ -1,0 +1,93 @@
+<!-- templates/select_apartment.html -->
+{% extends "base_bootstrap.html" %}
+{% load humanize %}
+
+{% block content %}
+    <h1>Seleccionar Proyecto y Apartamento</h1>
+    <a href="{% url 'pagos:payments_index' %}" class="btn btn-primary">Volver al menú</a>
+
+    <!-- Form to select project and apartment -->
+    <form method="POST">
+        {% csrf_token %}
+
+        <!-- Project Selection -->
+        <div class="form-group">
+            <label for="project">Seleccione el Proyecto</label>
+            <select name="project" id="project" class="form-control" onchange="this.form.submit()">
+                <option value="">-- Seleccione un proyecto --</option>
+                {% for project in projects %}
+                    <option value="{{ project.id }}" {% if selected_project and project.id == selected_project.id %}selected{% endif %}>
+                        {{ project.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Apartment Selection (appears only after a project is selected) -->
+        {% if apartments %}
+            <div class="form-group">
+                <label for="apartment_number">Seleccione el Número de Apartamento</label>
+                <select name="apartment_number" id="apartment_number" class="form-control">
+                    <option value="">-- Seleccione un número --</option>
+                    {% for apartment in apartments %}
+                        <option value="{{ apartment.number }}" {% if selected_apartment and apartment.number == selected_apartment.number %}selected{% endif %}>
+                            {{ apartment.number }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Ver Detalles</button>
+        {% endif %}
+    </form>
+
+    <!-- Show the selected apartment's details -->
+    {% if selected_apartment %}
+        <h2>Detalles del Apartamento</h2>
+        <table class="table table-striped table-bordered">
+            <tr>
+                <th>Proyecto</th>
+                <td>{{ selected_apartment.project }}</td>
+            </tr>
+
+            <tr>
+                <th>Número</th>
+                <td>{{ selected_apartment.number }}</td>
+            </tr>
+            <tr>
+                <th>Área (m²)</th>
+                <td>{{ selected_apartment.area }}</td>
+            </tr>
+            {% if total_price %}
+            <tr>
+                <th>Precio Total</th>
+                <td>${{ total_price|floatformat:2|intcomma }}</td>
+            </tr>
+            {% endif %}
+            <tr>
+                <th>Estatus</th>
+                <td>{{ selected_apartment.status }}</td>
+            </tr>
+
+            <!-- Display the current list price if available -->
+            {% if selected_price_list %}
+            <tr>
+                <th>Precio Actual</th>
+                <td>${{ selected_price_list.current_list_price|floatformat:2|intcomma }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <th>Precio Actual</th>
+                <td>No disponible</td>
+            </tr>
+            {% endif %}
+        </table>
+
+        <!-- Button to go to plan_pagos.html -->
+        {% if selected_apartment.status == "disponible" %}
+        <div class="mt-3">
+            <a href="{% url 'pagos:plan_pagos' %}?total_price={{ total_price }}&apartment_number={{ selected_apartment.number }}&selected_project={{ selected_apartment.project }}" class="btn btn-primary">Cotizar</a>
+        </div>
+        {% endif %}
+    {% endif %}
+    
+{% endblock %}

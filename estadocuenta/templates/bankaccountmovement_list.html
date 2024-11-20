@@ -1,0 +1,122 @@
+{% extends "base_bootstrap.html" %}
+
+
+{% block content %}
+  <h1>Cargos colegiatura</h1>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Id</th>
+        <th>Date</th>
+        <th>Type</th>
+        <th>Amount</th>
+        <th>Description</th>
+        <th>Student</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for movement in object_list %}
+    {% if movement.get_transaction_type_display == "Cargos Colegiatura" or movement.get_transaction_type_display == "Pagos Colegiatura" %}
+      <tr>
+        <td>{{ movement.student.identificacion }}</td>
+        <td>{{ movement.transaction_date }}</td>
+        <td>{{ movement.get_transaction_type_display }}</td>
+        <td>{{ movement.amount }}</td>
+        <td>{{ movement.description }}</td>
+        <td>{{ movement.student }}</td>
+        <td><a href="{% url 'movimientos_delete' movement.pk %}" class="btn btn-danger btn-sm">Delete</a></td>
+      </tr>
+      {% endif %}
+    {% endfor %}
+    <tr>
+      <td colspan="3"></td>
+      <td colspan="2"><strong>Balance:</strong></td>
+      <td>$ {{ balance_col }}</td>
+    </tr>
+    </tbody>
+  </table>
+
+  <h1>Cargos cuotas</h1>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Id</th>
+        <th>Date</th>
+        <th>Type</th>
+        <th>Amount</th>
+        <th>Description</th>
+        <th>Student</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for movement in object_list %}
+    {% if movement.get_transaction_type_display == "Cargos Cuotas" %}
+      <tr>
+        <td>{{ movement.student.identificacion }}</td>
+        <td>{{ movement.transaction_date }}</td>
+        <td>{{ movement.get_transaction_type_display }}</td>
+        <td>{{ movement.amount }}</td>
+        <td>{{ movement.description }}</td>
+        <td>{{ movement.student }}</td>
+        <td><a href="{% url 'movimientos_delete' movement.pk %}" class="btn btn-danger btn-sm">Delete</a></td>
+      </tr>
+      {% endif %}
+    {% endfor %}
+    <tr>
+      <td colspan="3"></td>
+      <td colspan="2"><strong>Balance:</strong></td>
+      <td>$ {{ balance_cuo }}</td>
+    </tr>
+    </tbody>
+  </table>
+
+  <h1>Cargos seguros</h1>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Id</th>
+        <th>Date</th>
+        <th>Type</th>
+        <th>Amount</th>
+        <th>Description</th>
+        <th>Student</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for movement in object_list %}
+    {% if movement.get_transaction_type_display == "Cargos Seguro" %}
+      <tr>
+        <td>{{ movement.student.identificacion }}</td>
+        <td>{{ movement.transaction_date }}</td>
+        <td>{{ movement.get_transaction_type_display }}</td>
+        <td>{{ movement.amount }}</td>
+        <td>{{ movement.description }}</td>
+        <td>{{ movement.student }}</td>
+        <td><a href="{% url 'movimientos_delete' movement.pk %}" class="btn btn-danger btn-sm">Delete</a></td>
+      </tr>
+      {% endif %}
+    {% endfor %}
+    <tr>
+      <td colspan="3"></td>
+      <td colspan="2"><strong>Balance:</strong></td>
+      <td>$ {{ balance_seg }}</td>
+    </tr>
+    </tbody>
+  </table>
+
+  <h1>Todos</h1>
+  <table class="table table-striped">
+    <tr>
+      <td colspan="3"></td>
+      <td colspan="2"><strong>Balance:</strong></td>
+      <td>$ {{ balance }}</td>
+    </tr>
+    </tbody>
+  </table>
+  
+  <a href="{% url 'bankaccountmovementform' %}" class="btn btn-primary mb-3">Add Movement</a>
+  <a href="{% url 'estadocuenta' %}" class="btn btn-primary mb-3">Return to Menu</a>
+{% endblock %}

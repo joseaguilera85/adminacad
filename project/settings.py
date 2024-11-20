@@ -37,8 +37,16 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    'django.contrib.humanize',
     'appname',
-    'adminacad',
+    'apartments',
+    'analysis',
+    'bancos',
+    'clientes',
+    'egresos',
+    'pagos',
+    'menu'
+    
 ]
 
 MIDDLEWARE = [
@@ -123,3 +131,23 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+LOGIN_URL = '/login/'
+
+LOGIN_REDIRECT_URL = '/menu/'
+LOGOUT_REDIRECT_URL = '/menu/'     
+
+
+# Email configuration for Gmail
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = "My App <jose.aguilera.lazo@gmail.com>"
+EMAIL_HOST_USER = 'jose.aguilera.lazo@@gmail.com'
+EMAIL_HOST_PASSWORD = 'gsvv enwe ehke qrgk'  # Or use an environment variable for better security
+
+
+# Image
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'

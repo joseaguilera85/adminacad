@@ -1,0 +1,17 @@
+<!-- templates/analysis/results.html -->
+
+{% extends "base_bootstrap.html" %}
+
+{% block title %}Soft Costs Results{% endblock %}
+
+{% block content %}
+    <h1>Soft Costs Results for {{ project_cost.project.name }}</h1>
+    <a href="{% url 'analysis:download_excel_flu' project_cost.id %}" class="btn btn-success mt-3">Download Excel</a> 
+    <div>
+        <!-- Render the DataFrame as HTML table -->
+        {{ total_cash_flow|safe }}
+        
+    </div>
+
+    <a href="{% url 'analysis:select_project_cost' %}" class="btn btn-secondary">Back to Project Selection</a>
+{% endblock %}

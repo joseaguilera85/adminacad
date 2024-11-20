@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NPV Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 2em;
+        }
+        label, input, button {
+            margin: 0.5em 0;
+        }
+        #result {
+            margin-top: 1em;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Net Present Value (NPV) Calculator</h1>
+
+    <label for="paymentRecordId">Payment Record ID:</label>
+    <input type="number" id="paymentRecordId" placeholder="Enter Payment Record ID">
+    
+    <button onclick="calculateNPV()">Calculate NPV</button>
+
+    <div id="result"></div>
+
+    <script>
+        function calculateNPV() {
+            const paymentRecordId = document.getElementById('paymentRecordId').value;
+            const resultDiv = document.getElementById('result');
+
+            if (!paymentRecordId) {
+                resultDiv.innerText = 'Please enter a valid Payment Record ID.';
+                return;
+            }
+
+            fetch(`/calculate-npv/${paymentRecordId}/`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    resultDiv.innerText = `The NPV is: $${data.npv.toFixed(2)}`;
+                })
+                .catch(error => {
+                    console.error('Error fetching NPV:', error);
+                    resultDiv.innerText = 'Failed to calculate NPV. Please try again.';
+                });
+        }
+    </script>
+
+</body>
+</html>

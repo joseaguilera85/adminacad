@@ -1,0 +1,40 @@
+{% extends "base_bootstrap.html" %}
+
+{% block content %}
+    <h1>Lista de Clientes</h1>
+    {% if error %}
+        <div class="alert alert-danger">{{ error }}</div>
+    {% endif %}
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Edad</th>
+                <th>Celular</th>
+                <th>Email</th>
+                <th>Modo de Contacto</th>
+                <th>Estatus</th>
+                <th>Tipo de Propiedad</th>
+                <th>Presupuesto</th>
+                <th>Proyecto</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cliente in clientes %}
+                <tr>
+                    <td>{{ cliente.get_full_name }}</td>
+                    <td>{{ cliente.cliente.apellido }}</td> <!-- Repeat if you need them separately -->
+                    <td>{{ cliente.cliente.edad }}</td>
+                    <td>{{ cliente.get_contact_info.celular }}</td>
+                    <td>{{ cliente.get_contact_info.mail }}</td>
+                    <td>{{ cliente.cliente.get_modo_contacto_display }}</td>
+                    <td>{{ cliente.get_client_status }}</td>
+                    <td>{{ cliente.cliente.get_tipo_propiedad_display }}</td>
+                    <td>{{ cliente.cliente.presupuesto }}</td>
+                    <td>{{ cliente.cliente.project.name }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends "base_dashboard.html" %}
+{% block content %}
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'apartments/css/styles.css' %}">
+
+<!-- Header Section -->
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="custom-brown-text">Project List</h2>
+    <a href="{% url 'menu:menu' %}" class="btn custom-brown-btn">Regresar al Menú Principal</a>
+    <a href="{% url 'apartments:create_project' %}" class="btn custom-brown-btn me-2">Create a New Project</a>
+</div>
+
+<div class="container">
+    <hr class="custom-hr">
+</div>
+
+<!-- Project Grid -->
+<div class="container">
+    <div class="project-list">
+        {% for project in projects %}
+        <div class="project-card">
+            <!-- Project Image -->
+            <div class="project-image-container">
+                {% if project.image %}
+                <img src="{{ project.image.url }}" alt="{{ project.name }}" class="project-image">
+                {% else %}
+                <p>No image available</p>
+                {% endif %}
+            </div>
+
+            <!-- Project Details -->
+            <div class="project-info">
+                <h4><strong>{{ project.name }}</strong></h4>
+                <p>{{ project.location }}</p>
+                <p>Start: {{ project.start_date|date:"F j, Y" }}</p>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="project-buttons">
+                <a href="{% url 'apartments:project_edit' project.pk %}" class="btn custom-brown-btn btn-sm mb-2" aria-label="Edit Project">Edit Project</a>
+                <a href="{% url 'apartments:apartment_list' project.pk %}" class="btn btn-success btn-sm mb-2" aria-label="View Apartments">View Apartments</a>
+                <a href="{% url 'apartments:add_apartment' %}" class="btn btn-success btn-sm mb-2" aria-label="Add Apartments">Add Apartments</a>
+                <a href="{% url 'apartments:project_delete' project.pk %}" class="btn btn-delete btn-sm" onclick="return confirm('Are you sure you want to delete this project?');" aria-label="Delete Project">Delete Project</a>
+            </div>
+        </div>
+        {% empty %}
+        <p>No projects available.</p>
+        {% endfor %}
+    </div>
+</div>
+
+<hr class="custom-hr">
+
+{% endblock %}

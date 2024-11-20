@@ -1,0 +1,17 @@
+<!-- templates/apartments/apartment_confirm_delete.html -->
+{% extends "base_dashboard.html" %}
+{% load humanize %}
+{% load static %}  <!-- Load the static tag here -->
+
+{% block title %}Confirm Delete{% endblock %}
+
+{% block content %}
+<h2>Confirm Deletion</h2>
+<p>Are you sure you want to delete apartment number {{ apartment.number }}?</p>
+<form method="POST">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Confirm Delete</button>
+    <a href="{% url 'apartments:apartment_list' %}" class="btn btn-secondary">Cancel</a>
+</form>
+<link rel="stylesheet" href="{% static 'apartments/css/styles.css' %}">
+{% endblock %}

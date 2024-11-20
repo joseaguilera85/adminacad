@@ -1,0 +1,113 @@
+{% extends "base_bootstrap.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Price List</h1>
+    <a href="{% url 'pagos:payments_index' %}" class="btn btn-primary">Volver al menú</a>
+
+    <!-- Project Filter -->
+    <form method="GET" class="mb-3">
+        <div class="form-group">
+            <label for="project">Select Project:</label>
+            <select id="project" name="project" class="form-control" onchange="this.form.submit()">
+                <option value="">All Projects</option>
+                {% for project in projects %}
+                    <option value="{{ project.id }}" {% if project.id == selected_project_id %}selected{% endif %}>
+                        {{ project.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+    </form>
+
+    <!-- Price List Table -->
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Apartment</th>
+                <th>Typology</th>
+                <th>Current Price List Index</th>  <!-- New column for current_list_price_index -->
+                <th>Current List Price</th>  <!-- New column for current list price -->
+                <th></th>  <!-- Empty column -->
+                <th>List 0</th>
+                <th>List 1</th>
+                <th>List 2</th>
+                <th>List 3</th>
+                <th>List 4</th>
+                <th>List 5</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for apartment in apartments %}
+                <tr>
+                    <td>{{ apartment.number }}</td>
+                    <td>{{ apartment.tipologia }}</td>
+                    {% with price_list=apartment.price_lists.first %}
+                        <td>{{ price_list.current_list_price_index }}</td>  <!-- Display current_list_price_index -->
+                        <td>
+                            {% if price_list.current_list_price %}
+                                ${{ price_list.current_list_price|floatformat:0 }}  <!-- Display current list price with $ and no decimals -->
+                            {% else %}
+                                $0
+                            {% endif %}
+                        </td>
+                        <td></td>  <!-- Empty cell for the empty column -->
+                        <td>
+                            {% if price_list %}
+                                ${{ price_list.list_number_0|floatformat:0 }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if price_list %}
+                                ${{ price_list.list_number_1|floatformat:0 }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if price_list %}
+                                ${{ price_list.list_number_2|floatformat:0 }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if price_list %}
+                                ${{ price_list.list_number_3|floatformat:0 }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if price_list %}
+                                ${{ price_list.list_number_4|floatformat:0 }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if price_list %}
+                                ${{ price_list.list_number_5|floatformat:0 }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                    {% endwith %}
+                    <td>
+                        <a href="{% url 'pagos:edit_price_list_values' apartment.id %}" class="btn btn-primary">Edit Values</a>
+                        <a href="{% url 'pagos:edit_current_price_list_index' apartment.id %}" class="btn btn-primary">Edit Index</a>
+
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="12" class="text-center">No apartments available.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -1,0 +1,15 @@
+<!-- clientes/templates/clientes/403.html -->
+{% extends "base_dashboard.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'clientes/css/styles.css' %}"> <!-- Link to your CSS file -->
+{% endblock %}
+
+{% block content %}
+    <div class="container text-center mt-5">
+        <h3>Lo sentimos, pero no tienes permisos para acceder a esta página.</h3>
+        <a href="{% url 'clientes:home' %}" class="btn btn-primary">Volver al menú</a>
+    </div>
+{% endblock %}

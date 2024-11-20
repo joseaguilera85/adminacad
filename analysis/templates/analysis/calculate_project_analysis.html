@@ -1,0 +1,26 @@
+{% extends "base_bootstrap.html" %}
+
+{% block title %}Select Project Cost{% endblock %}
+
+{% block content %}
+    <h1>Select Project Cost</h1>
+
+    <form method="post" action="{% url 'analysis:redirect_to_view' %}">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="project_cost_id">Select Project Cost:</label>
+            <select id="project_cost_id" name="project_cost_id" class="form-control">
+                {% for cost in project_costs %}
+                    <option value="{{ cost.id }}">{{ cost.project.name }} - {{ cost.id }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <button type="submit" name="action" value="apartment_payments" class="btn btn-primary">Ingresos</button>
+        <button type="submit" name="action" value="apartment_comisiones" class="btn btn-primary">Comisiones</button>
+        <button type="submit" name="action" value="soft_costs" class="btn btn-primary">Soft Cost</button>
+        <button type="submit" name="action" value="calculate_flujo" class="btn btn-primary">Flujo</button>
+        
+    </form>
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends "base_bootstrap.html" %}
+{% load humanize %}
+
+{% block content %}
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        .button-container {
+            margin-top: 50px;
+        }
+        .button-container form {
+            margin-bottom: 15px; /* Adjust the value as needed */
+        }
+    </style>
+
+    <h1>Welcome to the Project Analysis Dashboard</h1>
+
+    <div class="button-container">
+        <form action="{% url 'analysis:project_cost_list' %}" method="get">
+            <button type="submit" class="btn btn-primary btn-lg">Variables del proyecto</button>
+        </form>
+        <form action="{% url 'analysis:select_project_cost' %}" method="get">
+            <button type="submit" class="btn btn-primary btn-lg">Inteligencia</button>
+        </form>
+        
+    </div>
+{% endblock %}
+
+

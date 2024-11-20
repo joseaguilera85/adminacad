@@ -1,0 +1,104 @@
+/* ==============================
+   Global Variables
+   ============================== */
+   :root {
+    /* Color Palette */
+    --primary-color: #4E342E; /* Coffee Brown */
+    --secondary-color: #6F4E37; /* Darker Brown */
+    --background-color: #F5F5F5; /* Light Background */
+    --text-color: #333333; /* Text */
+    --border-color: #DEE2E6; /* Border */
+    --muted-text-color: #7D7D7D; /* Muted Text */
+    --project-card-background: #D7CCC8; /* Light Coffee-Brown */
+    --project-card-shadow: rgba(0, 0, 0, 0.1); /* Shadow */
+
+    /* Typography */
+    --font-family: 'Roboto', sans-serif;
+    --font-size-small: 0.875rem; /* 14px */
+    --font-size-base: 1rem; /* 16px */
+    --font-size-large: 1.25rem; /* 24px */
+    --font-size-xlarge: 2rem; /* 32px */
+}
+
+/* ==============================
+   Global Styles
+   ============================== */
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    font-family: var(--font-family);
+    font-size: var(--font-size-large);
+}
+
+nav {
+    background-color: var(--primary-color);
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 1rem;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+nav a:hover {
+    color: var(--secondary-color);
+    text-decoration: underline;
+}
+
+nav div {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+nav div span {
+    font-size: 1rem;
+}
+
+footer {
+    background-color: var(--secondary-color);
+    color: white;
+    padding: 1.5rem;
+    text-align: center;
+    margin-top: auto; /* Push the footer to the bottom of the page */
+}
+
+.footer-container {
+    background-color: #f8f9fa; /* Optional styling */
+    padding: 10px;
+    text-align: center;
+}
+
+footer p {
+    margin: 0;
+    font-size: 1rem;
+    font-family: var(--font-family);
+}
+
+.custom-hr {
+    border: 0;
+    height: 5px;
+    background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+    margin: 2rem 0;
+}
+
+.custom-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    background-color:  #4E342E;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+}
+
+.logo-text {
+    font-size: 2rem; /* Adjust as needed */
+    font-weight: bold; /* Make it bold */
+    color: --text-color; /* Optional: Define a color */
+}

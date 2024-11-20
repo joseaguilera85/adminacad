@@ -1,0 +1,19 @@
+<!-- edit_purchase_order.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Purchase Order</title>
+</head>
+<body>
+    <h1>Edit Purchase Order</h1>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Save Changes</button>
+    </form>
+    <br>
+    <a href="{% url 'egresos:purchase_order_list' %}">Back to Purchase Orders List</a>
+</body>
+</html>

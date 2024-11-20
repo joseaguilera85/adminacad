@@ -1,0 +1,16 @@
+<!-- templates/analysis/apartment_comisiones.html -->
+
+{% extends "base_bootstrap.html" %}
+
+{% block title %}Apartment Comisiones{% endblock %}
+
+{% block content %}
+    <h1>Apartment Comisiones for {{ project_cost.project.name }}</h1>
+    <a href="{% url 'analysis:download_excel_com' project_cost.id %}" class="btn btn-success mt-3">Download Excel</a> 
+
+    <div>
+        {{ pivot_table_html|safe }}
+    </div>
+
+    <a href="{% url 'analysis:select_project_cost' %}" class="btn btn-secondary">Back to Project Selection</a>
+{% endblock %}

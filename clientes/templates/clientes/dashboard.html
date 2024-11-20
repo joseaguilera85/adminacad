@@ -1,0 +1,90 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'clientes/css/styles.css' %}">    
+<h1>Dashboard</h1>
+    <div>
+        <a href="{% url 'clientes:clientes_home' %}" class="btn custom-brown-btn btn-sm">Return to Home</a>
+    </div>
+    
+    <!-- New Leads per Month Chart -->
+    <canvas id="leadsChart"></canvas>
+
+    <!-- Lead Conversion Rate per Project Chart -->
+    <canvas id="conversionChart"></canvas>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>  <!-- Include Chart.js library -->
+
+    <script>
+        // New Leads per Month Chart
+        var leadsChartContext = document.getElementById('leadsChart').getContext('2d');
+        var leadsChart = new Chart(leadsChartContext, {
+            type: 'line',  // Line chart
+            data: {
+                labels: {{ labels|safe }},  // X-axis: months
+                datasets: [{
+                    label: 'New Leads',
+                    data: {{ leads_data|safe }},  // Y-axis: leads count
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Month'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Number of Leads'
+                        },
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Lead Conversion Rate per Project Chart
+        var conversionChartContext = document.getElementById('conversionChart').getContext('2d');
+        var conversionChart = new Chart(conversionChartContext, {
+            type: 'bar',  // Bar chart
+            data: {
+                labels: {{ conversion_labels|safe }},  // X-axis: project names
+                datasets: [{
+                    label: 'Lead Conversion Rate (%)',
+                    data: {{ conversion_data|safe }},  // Y-axis: conversion rate
+                    backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                    borderColor: 'rgba(153, 102, 255, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Project'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Conversion Rate (%)'
+                        },
+                        beginAtZero: true,
+                        max: 100
+                    }
+                }
+            }
+        });
+    </script>
+
+{% endblock %}

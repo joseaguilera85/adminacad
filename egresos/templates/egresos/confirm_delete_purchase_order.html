@@ -1,0 +1,22 @@
+<!-- confirm_delete_purchase_order.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Purchase Order</title>
+</head>
+<body>
+    <h1>Are you sure you want to delete this purchase order?</h1>
+    <p>Vendor: {{ purchase_order.empresa }}</p>
+    <p>Order Date: {{ purchase_order.order_date }}</p>
+    <p>Status: {{ purchase_order.status }}</p>
+
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit">Yes, Delete</button>
+    </form>
+    <br>
+    <a href="{% url 'egresos:purchase_order_list' %}">Cancel</a>
+</body>
+</html>

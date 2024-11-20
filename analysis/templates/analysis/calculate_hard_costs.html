@@ -1,0 +1,25 @@
+<!-- templates/analysis/calculate_hard_costs.html -->
+
+{% extends "base_bootstrap.html" %}
+
+{% block title %}Calculate Hard Costs{% endblock %}
+
+{% block content %}
+    <h1>Calculate Hard Costs for Project: {{ project_cost.project.name }}</h1>
+
+    <p><strong>Number of Lots:</strong> {{ project_cost.numero_lotes }}</p>
+    <p><strong>Average Lot Size:</strong> {{ project_cost.tamaño_promedio_lotes }}</p>
+    <p><strong>Municipal Cession:</strong> {{ project_cost.cesion_municipal }}</p>
+    <p><strong>Roads and Pavements:</strong> {{ project_cost.vialidades_pavimentos }}</p>
+    <p><strong>Gardens and External Amenities:</strong> {{ project_cost.jardines_amenidades_externas }}</p>
+    <p><strong>Sellable Area Cost:</strong> {{ project_cost.costo_area_vendible_lotes }}</p>
+    <p><strong>Road and Pavement Cost:</strong> {{ project_cost.costo_vialidades_pavimentos }}</p>
+    <p><strong>External Amenities Cost:</strong> {{ project_cost.costo_amenidades_externas }}</p>
+    <p><strong>Exterior Municipal Cost:</strong> {{ project_cost.costo_exterior_municipal }}</p>
+    <p><strong>Hard Contingencies:</strong> {{ project_cost.imprevistos_hard }}</p>
+    <p><strong>VAT on Hard Costs:</strong> {{ project_cost.iva_hard_cost }}</p>
+
+    <h2>Total Hard Cost: {{ total_hard_cost }}</h2>
+
+    <a href="{% url 'analysis:project_cost_list' %}" class="btn btn-primary">Back to Project Cost List</a>
+{% endblock %}

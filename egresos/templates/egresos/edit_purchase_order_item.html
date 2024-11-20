@@ -1,0 +1,34 @@
+<!-- edit_purchase_order_item.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Purchase Order Item</title>
+</head>
+<body>
+    <h1>Edit Purchase Order Item</h1>
+
+    <h2>Purchase Order: {{ purchase_order.id }}</h2>
+
+    <!-- Form to edit PurchaseOrderItem -->
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Save Changes</button>
+    </form>
+
+    <h3>All Items in This Purchase Order</h3>
+    <ul>
+        {% for item in items %}
+            <li>
+                {{ item.item_name }} - {{ item.quantity }} - {{ item.price }}
+                <a href="{% url 'egresos:edit_purchase_order_item' purchase_order.id item.id %}">Edit</a> |
+            </li>
+        {% endfor %}
+    </ul>
+
+    <br>
+    <a href="{% url 'egresos:purchase_order_list' %}">Back to Purchase Orders List</a>
+</body>
+</html>

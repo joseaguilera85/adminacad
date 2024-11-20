@@ -1,0 +1,18 @@
+{% extends "base_dashboard.html" %}
+{% load humanize %}
+{% load static %} 
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Confirm Deletion</h2>
+    <p>Are you sure you want to delete the project "{{ project.name }}"?</p>
+    
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn btn-delete btn-sm">Yes, delete</button>
+        <a href="{% url 'apartments:project_list' %}" class="btn custom-brown-btn">Cancel</a>
+    </form>
+</div>
+<hr class="custom-hr my-4">
+<link rel="stylesheet" href="{% static 'apartments/css/styles.css' %}">
+{% endblock %}

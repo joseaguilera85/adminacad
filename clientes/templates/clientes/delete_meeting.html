@@ -1,0 +1,15 @@
+<!-- templates/meetings/delete_meeting.html -->
+{% extends "base_bootstrap.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Delete Meeting</h1>
+    <p>Are you sure you want to delete the meeting scheduled for {{ meeting.date_time|date:"F j, Y, g:i A" }} with {{ meeting.client.nombre }}?</p>
+
+    <form method="POST" action="{% url 'clientes:delete_meeting' meeting.id %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Delete</button>
+        <a href="{% url 'clientes:meeting_list' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

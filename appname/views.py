@@ -1,15 +1,25 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login
+from django.shortcuts import render
+from appname.forms import MenuForm
+from .models import Menu
+from django.http import JsonResponse
 
-def login_view(request):
+def form_view(request):
+    form = MenuForm()
+    
     if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            return render(request, 'home.html')
-        else:
-            return render(request, 'login.html', {'error_message': 'Invalid login credentials'})
-    else:
-        return render(request, 'login.html')
+        form = MenuForm(request.POST)
+        print(request.POST)
+        if form.is_valid():
+            cd = form.cleaned_data
+            
+            lf = Menu(
+                item_name = cd['item_name'],
+                category = cd['category'],
+                description = cd['description'],
+            )
+            
+            lf.save()
+            return JsonResponse({
+                'message': 'success'
+            })
+    return render(request, 'booking.html', {'form': form})

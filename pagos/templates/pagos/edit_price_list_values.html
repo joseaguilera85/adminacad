@@ -1,0 +1,14 @@
+{% extends "base_bootstrap.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Edit Price List Values for Apartment {{ price_list.apartment.number }}</h1>
+
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-success">Save</button>
+        <a href="{% url 'pagos:price_list' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,49 @@
+<!-- bancos/templates/bancos/bank_account_list.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank Accounts</title>
+</head>
+<body>
+    <h1>Bank Accounts</h1>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Account Number</th>
+                <th>Balance</th>
+                <th>Project</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for account in bank_accounts %}
+                <tr>
+                    <td>{{ account.account_number }}</td>
+                    <td>${{ account.balance }}</td>
+                    <td>{{ account.project.name }}</td>
+                    <td>
+                        <!-- Link to the transactions view for this specific account -->
+                        <a href="{% url 'bancos:account_transactions' account.account_number %}">
+                            <button>View Transactions</button>
+                        </a>
+                        <a href="{% url 'bancos:deposit' account.account_number %}">
+                            <button>Deposit</button>
+                        </a>
+                        <a href="{% url 'bancos:withdraw' account.account_number%}">
+                            <button>Witdrawal</button>
+                        </a>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="4">No bank accounts found.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</body>
+</html>

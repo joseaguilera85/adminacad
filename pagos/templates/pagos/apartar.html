@@ -1,0 +1,17 @@
+{% extends "base_bootstrap.html" %}
+
+{% block content %}
+    <h1>Cambiar Estatus del Apartamento {{ apartment.number }}</h1>
+
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="status">Seleccione el nuevo estatus</label>
+            <select name="status" id="status" class="form-control">
+                <option value="apartado">Apartado</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-success">Actualizar Estatus</button>
+    </form>
+{% endblock %}

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Purchase Order Item</title>
+</head>
+<body>
+    <h1>Add Items to Purchase Order (ID: {{ purchase_order.id }})</h1>
+
+    <h2>Purchase Order Items</h2>
+    <ul>
+        {% for item in items %}
+            <li>
+                {{ item.item_name }} - {{ item.quantity }} units - ${{ item.price }}
+                <a href="{% url 'egresos:edit_purchase_order_item' purchase_order.id item.id %}">
+                    <button>Edit</button>
+                </a>
+                <a href="{% url 'egresos:delete_purchase_order_item' purchase_order.id item.id %}">
+                    <button>Delete</button>
+                </a>
+            </li>
+        {% empty %}
+            <li>No items added yet.</li>
+        {% endfor %}
+    </ul>
+
+    <h3>Add a New Item</h3>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Add Item</button>
+    </form>
+
+    <br>
+    <a href="{% url 'egresos:purchase_order_list' %}">Return to purchase List</a>
+</body>
+</html>

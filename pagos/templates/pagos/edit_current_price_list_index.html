@@ -1,0 +1,24 @@
+{% extends "base_bootstrap.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Select Current Price List Index for Apartment {{ price_list.apartment.number }}</h1>
+
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="id_current_list_price">Current List Price:</label>
+            <select name="current_list_price_index" id="id_current_list_price" class="form-control" required>
+                <option value="0" {% if price_list.current_list_price_index == 0 %}selected{% endif %}>${{ price_list.list_number_0|floatformat:0 }}</option>
+                <option value="1" {% if price_list.current_list_price_index == 1 %}selected{% endif %}>${{ price_list.list_number_1|floatformat:0 }}</option>
+                <option value="2" {% if price_list.current_list_price_index == 2 %}selected{% endif %}>${{ price_list.list_number_2|floatformat:0 }}</option>
+                <option value="3" {% if price_list.current_list_price_index == 3 %}selected{% endif %}>${{ price_list.list_number_3|floatformat:0 }}</option>
+                <option value="4" {% if price_list.current_list_price_index == 4 %}selected{% endif %}>${{ price_list.list_number_4|floatformat:0 }}</option>
+                <option value="5" {% if price_list.current_list_price_index == 5 %}selected{% endif %}>${{ price_list.list_number_5|floatformat:0 }}</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-success">Save</button>
+        <a href="{% url 'price_list' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,92 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+
+
+{% block head %}
+    <title>Vendor List</title>
+    <style>
+        /* Basic styling for the table and link */
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+        }
+        a {
+            display: inline-block;
+            margin: 10px 0;
+            color: #007bff;
+            text-decoration: none;
+        }
+        a:hover {
+            color: #0056b3;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #8B4513;  /* Brown border color */
+        }
+        th {
+            background-color: black;
+        }
+
+        .actions a {
+            margin: 0 5px;
+            color: #007bff;
+            text-decoration: none;
+        }
+        .actions a:hover {
+            color: #0056b3;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <h1>Vendor List</h1>
+
+    <a href="{% url 'egresos:add_vendor' %}">Create a New Vendor</a>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Company</th>
+                <th>Person</th>
+                <th>Fiscal ID</th>
+                <th>Email</th>
+                <th>Telephone</th>
+                <th>Address</th>
+                <th>State</th>
+                <th>CP</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for vendor in vendors %}
+                <tr>
+                    <td>{{ vendor.empresa }}</td>
+                    <td>{{ vendor.persona }}</td>
+                    <td>{{ vendor.fiscal_id }}</td>
+                    <td>{{ vendor.email }}</td>
+                    <td>{{ vendor.telephone }}</td>
+                    <td>{{ vendor.address }}</td>
+                    <td>{{ vendor.state }}</td>
+                    <td>{{ vendor.CP }}</td>
+                    <td class="actions">
+                        <a href="{% url 'egresos:edit_vendor' vendor.id %}">Edit</a> |
+                        <a href="{% url 'egresos:delete_vendor' vendor.id %}" onclick="return confirm('Are you sure you want to delete this vendor?')">Delete</a>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="9">No vendors found.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <a href="{% url 'egresos:egresos_menu' %}">Regresar a menú</a>
+{% endblock %}

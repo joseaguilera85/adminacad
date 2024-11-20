@@ -1,0 +1,55 @@
+{% extends "base_dashboard.html" %}
+{% load humanize %}
+{% load static %}
+
+{% block head %}
+    <title>Main Menu</title>
+    <link rel="stylesheet" href="{% static 'clientes/css/styles.css' %}">
+    <style>
+        /* Basic styling for buttons and center alignment */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+        .menu-container {
+            text-align: center;
+        }
+        .menu-container h1 {
+            margin-bottom: 20px;
+        }
+        .menu-button {
+            display: block;
+            width: 200px;
+            padding: 10px;
+            margin: 10px auto;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            text-align: center;
+            transition: background-color 0.3s;
+        }
+        .menu-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+<body>
+    <div class="menu-container">
+        <h1>Main Menu</h1>
+        <a href="{% url 'egresos:vendor_list' %}" class="btn btn-outline-primary btn-spacing">Catálogo de Proveedores</a>
+        <a href="{% url 'egresos:purchase_order_list' %}" class="btn btn-outline-primary btn-spacing">Compras</a>
+        <a href="{% url 'egresos:almacen' %}" class="btn btn-outline-primary btn-spacingn">Almacén</a>
+        <a href="{% url 'egresos:lista_egresos' %}" class="btn btn-outline-primary btn-spacing">Egresos</a>
+    </div>
+</body>
+{% endblock %}

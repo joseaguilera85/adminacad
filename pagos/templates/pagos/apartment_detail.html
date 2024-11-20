@@ -1,0 +1,29 @@
+<!-- templates/apartment_detail.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalles del Departamento {{ apartment.number }}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'pagos/css/apartment_detail.css' %}">
+</head>
+<body>
+    <div class="apartment-detail">
+        <h1>Departamento {{ apartment.number }}</h1>
+
+        <div class="info">
+            <p><strong>Tipología:</strong> {{ apartment.tipologia }}</p>
+            <p><strong>Área:</strong> {{ apartment.area }} m²</p>
+            <p><strong>Precio por m²:</strong> ${{ apartment.price_per_m2 }} MXN</p>
+            <p><strong>Precio Total:</strong> ${{ apartment.total_price }} MXN</p>
+            <p><strong>Estado:</strong> {{ apartment.get_status_display }}</p>
+        </div>
+
+        <div class="actions">
+            <a href="{% url 'plan_edificio' %}" class="back-link">← Volver al Plano del Edificio</a>
+            <a href="#" class="contact-link">Contáctanos para más información</a>
+        </div>
+    </div>
+</body>
+</html>

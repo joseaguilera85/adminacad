@@ -1,0 +1,28 @@
+
+
+<!-- templates/plan_edificio.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plano del Edificio</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'pagos/css/plan_edificio.css' %}">
+</head>
+<body>
+    <a href="{% url 'pagos:payments_index' %}" class="btn btn-primary">Volver al menú</a>
+    <div class="building">
+        {% for floor in building %}
+            <div class="floor">
+                <div class="floor-number">Piso {{ floor.number }}</div>
+                {% for apartment in floor.apartments %}
+                    <a href="{% url 'pagos:apartment_detail' apartment %}" class="apartment-link">
+                        <div class="apartment">Departamento {{ apartment }}</div>
+                    </a>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

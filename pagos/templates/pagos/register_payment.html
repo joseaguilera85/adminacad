@@ -1,0 +1,14 @@
+{% extends "base_bootstrap.html" %}
+
+{% block content %}
+    <h1>Registrar Pago para {{ payment_record.cliente }}</h1>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="amount_paid">Monto Pagado</label>
+            <input type="number" name="amount_paid" step="0.01" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-success">Registrar Pago</button>
+    </form>
+    <a href="{% url 'pagos:list_payment_records' %}" class="btn btn-primary">Volver a la lista</a>
+{% endblock %}

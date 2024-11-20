@@ -1,0 +1,95 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'clientes/css/styles.css' %}">
+
+{% block head %}
+    <title>Almacen</title>
+    <style>
+        /* Styling for table and link */
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+        }
+        a {
+            display: inline-block;
+            margin: 10px 0;
+            color: #007bff;
+            text-decoration: none;
+        }
+        a:hover {
+            color: #0056b3;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #8B4513;  /* Brown border color */
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        .actions a {
+            margin: 0 5px;
+            color: #007bff;
+            text-decoration: none;
+        }
+        .actions a:hover {
+            color: #0056b3;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <h1>Almacen</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Order Date</th>
+                <th>Order ID</th>
+                <th>Project</th>
+                <th>Vendor</th>
+                
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in purchase_orders %}
+                <tr>
+                    <td>{{ order.order_date }}</td>
+                    <td>{{ order.id }}</td>
+                    <td>{{ order.project }}</td>
+                    <td>{{ order.empresa }}</td>
+                    
+                    <td>{{ order.status }}</td>
+                    <td class="actions">
+                        {% if order.status == "enviada" %}
+                            <a href="{% url 'egresos:edit_purchase_order' order.id %}"><button>Recibir pedido</button></a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="6">No purchase orders found.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <br>
+    <a href="{% url 'egresos:egresos_menu' %}">Regresar a menú</a>
+{% endblock %}

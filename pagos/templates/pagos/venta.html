@@ -1,0 +1,34 @@
+{% extends "base_bootstrap.html" %}
+
+{% block content %}
+    <h1>Cambiar Estatus del Apartamento {{ apartment.number }}</h1>
+
+    <!-- Status Update Form -->
+    <form method="POST" id="status-form">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="status">Seleccione el nuevo estatus</label>
+            <select name="status" id="status" class="form-control">
+                <option value="vendido">Vendido</option>
+            </select>
+        </div>
+    </form>
+
+    <h2>Plan de Pagos</h2>
+    <!-- Payment Plan Form -->
+    <form method="POST" id="payment-plan-form">
+        {% csrf_token %}
+        
+        {{ payment_plan_form.as_p }}  <!-- Render the payment plan form -->
+        
+        <!-- Button to save payment record -->
+        <button type="submit" name="action" value="save" class="btn btn-success">Guardar registro de pagos</button>
+    </form>
+
+    {% if error_message %}
+        <div class="alert alert-danger">{{ error_message }}</div>
+    {% endif %}
+
+{% endblock %}
+

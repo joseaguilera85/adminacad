@@ -1,0 +1,43 @@
+/* static/css/plan_edificio.css */
+body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background-color: #f8f9fa;  /* Light grey background for the entire page */
+    color: #212529;  /* Dark grey text color */
+}
+
+.building {
+    display: flex;
+    flex-direction: column-reverse;  /* Start from the bottom floor */
+    border: 2px solid #dee2e6;  /* Light grey border */
+    width: 90%;
+    max-width: 600px;  /* Limit width for larger screens */
+    margin: 2rem auto;
+    background-color: #ffffff;  /* White background for the building */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  /* Subtle shadow for a floating effect */
+    border-radius: 8px;  /* Rounded corners */
+}
+
+.floor {
+    display: flex;
+    justify-content: space-between;  /* Equal spacing between apartments */
+    padding: 0.5rem;
+    border-bottom: 1px solid #dee2e6;  /* Light grey border between floors */
+}
+
+.floor-number {
+    flex: 0 0 50px;  /* Fixed width for the floor number */
+    text-align: left;
+    font-weight: bold;
+    color: #495057;  /* Slightly lighter grey for the floor number */
+}
+
+.apartment {
+    flex: 1;
+    text-align: center;
+    border: 1px solid #ced4da;  /* Light grey border for apartments */
+    background-color: #e9ecef;  /* Very light grey background for apartments */
+    padding: 0.5rem;
+    margin: 0 0.5rem;
+    border-radius: 4px;  /* Slight rounding of apartment corners */
+    font-size: 0.9rem;  /* Slightly smaller text */
+}

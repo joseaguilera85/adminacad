@@ -1,0 +1,16 @@
+<!-- calculate_project_analysis_result.html -->
+
+{% extends "base_bootstrap.html" %}
+
+{% block title %}Project Analysis Results{% endblock %}
+
+{% block content %}
+    <h1>Project Analysis for {{ project_cost.project.name }}</h1>
+    
+    <h2>Monthly Sums</h2>
+    <div>
+        {{ monthly_sums_html|safe }}
+    </div>
+
+    <a href="{% url 'analysis:select_project_cost' %}" class="btn btn-secondary">Back to Project Selection</a>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Schedule a Meeting</h1>
+    
+<!-- Display messages -->
+{% if messages %}
+    <div>
+        {% for message in messages %}
+            <div class="alert mt-2" style="background-color: red; color: white; padding: 10px; border-radius: 5px;">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+    
+    <form method="POST" action="{% url 'clientes:schedule_meeting' %}">
+        {% csrf_token %}
+    
+        <div class="form-group">
+            <label for="{{ form.client.id_for_label }}" class="form-label">{{ form.client.label }}</label>
+            {{ form.client }}  <!-- This will show both nombre and apellido -->
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.salesperson.id_for_label }}" class="form-label">{{ form.salesperson.label }}</label>
+            {{ form.salesperson }}
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.meeting_date.id_for_label }}" class="form-label">{{ form.meeting_date.label }}</label>
+            {{ form.meeting_date }}  <!-- Separate date input -->
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.meeting_time.id_for_label }}" class="form-label">{{ form.meeting_time.label }}</label>
+            {{ form.meeting_time }}  <!-- Separate time input -->
+        </div>
+    
+        <div class="form-group text-center mt-3">
+            <button type="submit" class="btn custom-brown-btn btn-sm">Schedule Meeting</button>
+            <a href="{% url 'clientes:clientes_home' %}" class="btn custom-brown-btn btn-sm">Cancel</a>
+        </div>
+    </form>
+    
+<link rel="stylesheet" href="{% static 'clientes/css/styles.css' %}">
+{% endblock %}

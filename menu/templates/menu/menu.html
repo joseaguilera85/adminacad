@@ -1,0 +1,120 @@
+{% extends "base_dashboard.html" %}
+
+{% block content %}
+    <style>
+        /* Styles for the button container */
+        .button-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* Two equal-width columns */
+            gap: 40px; /* Space between buttons */
+            max-width: 400px; /* Limit container width */
+            margin: 20px auto; /* Center the container and add top margin */
+        }
+
+        /* General button styling */
+        button {
+            width: 100%;
+            height: 160px; /* Set a fixed height for uniform button size */
+            width: 240px; /* Set a fixed width */
+            font-size: 24px; /* Adjust font size */
+            color: white; /* Set text color to white */
+            cursor: pointer; /* Set pointer cursor on hover */
+            text-align: center; /* Center text horizontally */
+            display: flex;
+            align-items: center; /* Center text vertically */
+            justify-content: center; /* Center text horizontally */
+        }
+
+        /* Custom brown button styling */
+        .custom-brown-btn {
+            background-color: #4E342E; /* Coffee Brown color */
+            border-color: #4E342E; /* Match border with background */
+        }
+
+        /* Darker brown on hover for custom brown buttons */
+        .custom-brown-btn:hover {
+            background-color: #6F4E37; /* Darker shade of brown */
+        }
+
+        .custom-paragraph {
+        font-size: 32px;
+        font-family: 'Roboto', sans-serif; /* Optional: Make the font consistent */
+        font-weight: bold; /* Optional: Make the text bold */
+        color: var(--primary-color); /* Optional: Use your primary color for the text */
+        margin: 0; /* Optional: Remove default margin */
+        padding: 10px 0; /* Optional: Add some vertical padding */
+    }
+        }
+    </style>
+
+    <!-- Menu buttons section -->
+    <div class="container mt-4">
+        {% if user.is_superuser %}
+            <!-- Show buttons for superuser -->
+            <div class="row">
+                <!-- Container 1 - Planeación -->
+                <div class="col-md-3 col-sm-6 mb-4">
+                    <p class="custom-paragraph">Planeación</p>
+                    <button class="custom-brown-btn w-100 mb-3" onclick="location.href='{% url 'apartments:project_list' %}'">Admin Proyectos</button>
+                    <button class="custom-brown-btn w-100 mb-3" onclick="location.href='{% url 'analysis:analysis_home' %}'">Inteligencia inmobiliaria</button>
+                </div>
+        
+                <!-- Container 2 - Ventas -->
+                <div class="col-md-3 col-sm-6 mb-4">
+                    <p class="custom-paragraph">Ventas</p>
+                    <button class="custom-brown-btn w-100 mb-3" onclick="location.href='{% url 'clientes:clientes_home' %}'">CRM</button>
+                    <button class="custom-brown-btn w-100 mb-3" onclick="location.href='{% url 'pagos:payments_index' %}'">Admin Venta</button>
+                </div>
+        
+                <!-- Container 3 - Administración -->
+                <div class="col-md-3 col-sm-6 mb-4">
+                    <p class="custom-paragraph">Administración</p>
+                    <button class="custom-brown-btn w-100 mb-3" onclick="location.href='{% url 'egresos:egresos_menu' %}'">Compras / Almacen / Pagos</button>
+                    <button class="custom-brown-btn w-100 mb-3" onclick="location.href='{% url 'bancos:bancos_menu' %}'">Ingresos/Bancos</button>
+
+                </div>
+        
+                <!-- Container 4 - Usuarios -->
+                <div class="col-md-3 col-sm-6 mb-4">
+                    <p class="custom-paragraph">Usuarios</p>
+                    <button class="custom-brown-btn w-100 mb-3" onclick="location.href='{% url 'menu:register_user' %}'">Registro de usuarios</button>
+                    <button class="custom-brown-btn w-100 mb-3" onclick="location.href='{% url 'menu:change_password' %}'">Cambio de contraseña</button>
+                </div>
+            </div>
+    
+        {% elif is_ventas_group %}
+            <!-- Show only the 'Admin Venta' button for ventas group -->
+            <div class="row">
+                <div class="col-md-3 mb-4">
+                    <p class="custom-paragraph">Ventas</p>
+                    <button class="custom-brown-btn w-100 mb-3" onclick="location.href='{% url 'pagos:payments_index' %}'">Admin Venta</button>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <<p class="custom-paragraph">Usuarios</h5>
+                    <button class="custom-brown-btn w-100 mb-3" onclick="location.href='{% url 'menu:change_password' %}'">Cambio de contraseña</button>
+                </div>
+            </div>
+    
+        {% elif is_administracion_group %}
+            <!-- Show only the 'Admin Venta' button for administracion group -->
+            <div class="row">
+                <div class="col-md-3 mb-4">
+                    <p class="custom-paragraph">Usuarios</p>
+                    <button class="custom-brown-btn w-100 mb-3" onclick="location.href='{% url 'egresos:egresos_menu' %}'">Compras / Almacen / Pagos</button>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <p class="custom-paragraph">Usuarios</p>
+                    <button class="custom-brown-btn w-100 mb-3" onclick="location.href='{% url 'menu:change_password' %}'">Cambio de contraseña</button>
+                </div>
+            </div>
+    
+        {% elif is_clientes_group %}
+            <!-- Show message for clientes group -->
+            <p class="custom-paragraph">No hay nada disponible.</p>
+            <button class="custom-brown-btn w-100 mb-3" onclick="location.href='{% url 'menu:change_password' %}'">Cambio de contraseña</button>
+        
+        {% endif %}
+    </div>
+    
+
+{% endblock %}

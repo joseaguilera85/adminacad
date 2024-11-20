@@ -1,0 +1,84 @@
+{% extends "base_bootstrap.html" %}
+{% load humanize %}
+
+{% block content %}
+    <h1>Generar Plan de Pagos</h1>
+
+    <!-- Display the project and apartment information -->
+    <p>Proyecto: <span id="selected-project">{{ selected_project }}</span></p>
+    <p>Apartamento Seleccionado: <span id="apartment_number">{{ apartment_number }}</span></p>
+    <p>Precio Total: ${{ total_price|floatformat:0|intcomma }}</p>
+
+    <!-- Display success or error messages -->
+    {% if messages %}
+        <div class="alert alert-info" role="alert">
+            {% for message in messages %}
+                <div>{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% if message %}
+        <div class="alert alert-success" role="alert">
+            {{ message }}
+        </div>
+    {% endif %}
+
+    <!-- Form for payment calculation and submission -->
+    <form method="post" id="payment-form">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <!-- Calculation and submission buttons -->
+        <button type="submit" name="action" value="calculate" class="btn btn-primary">Calcular</button>
+        <button type="submit" name="action" value="cotizacion" class="btn btn-success">Enviar Cotización</button>
+    </form>
+
+    <!-- Display the ratio and indicator circle -->
+    {% if ratio and indicator_color %}
+        <br>
+        <p><strong>Semáforo de autorización de cotización:</strong> {{ ratio|floatformat:2 }}</p>
+        <span class="indicator-circle" style="background-color: 
+            {% if indicator_color == 'red' %}#ff4d4d{% elif indicator_color == 'yellow' %}#ffeb3b{% elif indicator_color == 'green' %}#4caf50{% else %}#cccccc{% endif %};">
+        </span>
+    {% endif %}
+
+    <!-- Display the payment plan if available -->
+    {% if plan_pagos %}
+        <h2>Resultados del Plan de Pagos</h2>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Mes</th>
+                    <th>Tipo de Pago</th>
+                    <th>Monto</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pago in plan_pagos.pagos %}
+                    <tr>
+                        <td>{{ pago.mes }}</td>
+                        <td>{{ pago.tipo }}</td>
+                        <td>${{ pago.pago|floatformat:2|intcomma }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <p><strong>Total a Pagar:</strong> ${{ plan_pagos.total|floatformat:2|intcomma }}</p>
+        <p><strong>NPV:</strong> ${{ npv|floatformat:2|intcomma }}</p>
+    {% endif %}
+
+    <!-- Style for the indicator circle -->
+    <style>
+        .indicator-circle {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+        }
+        /* Hide day selection in date picker if unnecessary */
+        select[name$='day'] {
+            display: none;
+        }
+    </style>
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends "base_dashboard.html" %}
+{% block content %}
+    <h1>Purchase Order: {{ purchase_order.id }}</h1>
+    <p>Project: {{ purchase_order.project }}</p>
+    <p>Vendor: {{ purchase_order.empresa }}</p>
+    <p>Status: {{ purchase_order.status }}</p>
+
+    <h3>Items:</h3>
+    <ul>
+        {% for item in items %}
+            <li>{{ item.item_name }} - {{ item.quantity }} x {{ item.price }} = {{ item.total_amount }}</li>
+        {% empty %}
+            <li>No items found for this purchase order.</li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'egresos:purchase_order_list' %}">Return to purchase List</a>
+{% endblock %}
+
+
+

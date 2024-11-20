@@ -1,0 +1,55 @@
+{% extends "base_bootstrap.html" %}
+
+{% block content %}
+    <h1>Lista de Registros de Pagos</h1>
+    <a href="{% url 'pagos:payments_index' %}" class="btn btn-primary">Volver al menú</a>
+    {% if messages %}
+        <div class="alert alert-info" role="alert">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Cliente</th>
+                <th>Proyecto</th>
+                <th>Apartment Number</th>
+                <th>% Descuento</th>
+                <th>% Enganche</th>
+                <th>% Mensualidades</th>
+                <th># Mensualidades</th>
+                <th>Mes de Inicio</th>
+                <th>Fecha de Registro</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in records %}
+                <tr>
+                    <td>{{ record.cliente }}</td>
+                    <td>{{ record.project.name }}</td>
+                    <td>{{ record.apartment.number }}</td>
+                    <td>{{ record.porcentaje_descuento }}</td>
+                    <td>{{ record.porcentaje_enganche }}</td>
+                    <td>{{ record.porcentaje_mensualidades }}</td>
+                    <td>{{ record.num_mensualidades }}</td>
+                    <td>{{ record.mes_inicio }}</td>
+                    <td>{{ record.created_at|date:"Y-m-d H:i:s" }}</td>
+                    <td>
+                        <a href="{% url 'pagos:record_detail' record.id %}" class="btn btn-info">Detalle de pagos</a>
+                        <a href="{% url 'pagos:account_statement' record.id %}" class="btn btn-info">Estado de cuenta</a>
+                        <form action="{% url 'pagos:delete_record' record.id %}" method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this record?');">Delete</button>
+                        </form>
+                        {% if is_admin %}
+                        <a href="{% url 'pagos:register_payment' record.id %}" class="btn btn-warning">Registrar Pagos</a>
+                    {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

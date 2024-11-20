@@ -1,0 +1,49 @@
+/* pagos/css/apartment_detail.css */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+}
+
+.apartment-detail {
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: #0077cc;
+}
+
+.info p {
+    margin: 8px 0;
+    font-size: 16px;
+}
+
+.actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.back-link, .contact-link {
+    text-decoration: none;
+    color: #0077cc;
+    font-weight: bold;
+    padding: 8px 12px;
+    border: 1px solid #0077cc;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.back-link:hover, .contact-link:hover {
+    background-color: #0077cc;
+    color: #fff;
+}

@@ -1,0 +1,51 @@
+{% extends "base_dashboard.html" %}
+{% load humanize %}
+{% load static %}  <!-- Load the static tag here -->
+
+{% block content %}
+<div class="container mt-4 d-flex justify-content-between align-items-center">
+    <h2>Apartment List{% if project %}: {{ project.name }}{% endif %}</h2>
+    <a href="{% url 'apartments:project_list' %}" class="btn custom-brown-btn btn-sm">Regresar</a>
+</div>
+<div>
+    <!-- Apartment Table -->
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Project Name</th> 
+                <th>Number</th>
+                <th>Area (m²)</th>
+                <th>Price per m²</th>
+                <th>Total Price</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in apartments_with_prices %}
+            <tr>
+                <td>{{ item.apartment.project.name }}</td>
+                <td>{{ item.apartment.number }}</td>
+                <td>{{ item.apartment.area }}</td>
+                <td>${{ item.current_list_price|floatformat:2|intcomma }}</td>
+                <td>${{ item.total_price|floatformat:2|intcomma }}</td>
+                <td>{{ item.apartment.get_status_display }}</td>
+                <td>
+                    <a href="{% url 'apartments:apartment_edit' item.apartment.pk %}" class="btn custom-brown-btn">Edit</a>
+                    <form action="{% url 'apartments:apartment_delete' item.apartment.pk %}" method="POST" style="display:inline;" class="danger-btn">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this apartment?');">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7">No apartments available.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+<link rel="stylesheet" href="{% static 'apartments/css/styles.css' %}">
+
+{% endblock %}

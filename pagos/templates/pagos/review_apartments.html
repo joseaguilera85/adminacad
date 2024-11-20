@@ -1,0 +1,49 @@
+{% extends "base_bootstrap.html" %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h1>Review All Apartments</h1>
+        <a href="{% url 'pagos:payments_index' %}" class="btn btn-primary">Volver al menú</a>
+        
+        <table class="table table-bordered">
+            <thead class="thead-light">
+                <tr>
+                    <th>Project</th>
+                    <th>Apartment</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for project in projects %}
+                    {% for apartment in project.apartments.all %}
+                        <tr>
+                            <td>{{ project.name }}</td>
+                            <td>{{ apartment.number }}</td>
+                            <td>{{ apartment.status }}</td>
+                            <td>
+                                {% if apartment.status == "disponible" %}
+                                    <a href="{% url 'pagos:apartar' apartment.id %}" class="btn btn-warning">Apartar</a>
+                                    <a href="{% url 'pagos:venta' apartment.id %}" class="btn btn-success">Venta</a>
+                                {% elif apartment.status == "apartado" %}
+                                    <a href="{% url 'pagos:venta' apartment.id %}" class="btn btn-success">Venta</a>
+                                    <a href="{% url 'pagos:disponible' apartment.id %}" class="btn btn-success">Disponible</a>
+                                {% elif apartment.status == "vendido" %}
+                                    <a href="{% url 'pagos:disponible' apartment.id %}" class="btn btn-success">Disponible</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="4">No apartments available for this project.</td>
+                        </tr>
+                    {% endfor %}
+                {% empty %}
+                    <tr>
+                        <td colspan="4">No projects available.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
