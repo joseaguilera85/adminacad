@@ -1,0 +1,16 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+
+{% block content %}
+<h2>Create Event</h2>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <button type="submit" class="btn btn-primary">Create Event</button>
+</form>
+
+<a href="{% url 'clientes:event_list' %}">Back to Event List</a>
+<link rel="stylesheet" href="{% static 'clientes/css/styles.css' %}"> <!-- Link to your CSS file -->
+{% endblock %}

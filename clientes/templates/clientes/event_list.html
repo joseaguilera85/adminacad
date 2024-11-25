@@ -1,0 +1,45 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+
+{% block content %}
+<h2>My Events</h2>
+<a href="{% url 'clientes:clientes_home' %}" class="btn custom-brown-btn btn-sm">Return to Home</a>
+
+{% if events %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Date</th>
+                <th>Location</th>
+                <th>Invited Clients</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for event in events %}
+                <tr>
+                    <td>{{ event.title }}</td>
+                    <td>{{ event.description }}</td>
+                    <td>{{ event.date|date:"D, M d Y H:i" }}</td>
+                    <td>{{ event.location }}</td>
+                    <td>
+                        <ul>
+                            {% for client in event.invited_clients.all %}
+                                <li>{{ client.nombre }} {{ client.apellido }}</li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No events found. <a href="{% url 'clientes_create_event' %}">Create your first event</a>.</p>
+{% endif %}
+<div>
+<br>
+<a href="{% url 'clientes:create_event' %}" class="btn btn-primary">Create New Event</a>
+</div>
+<link rel="stylesheet" href="{% static 'clientes/css/styles.css' %}"> <!-- Link to your CSS file -->
+{% endblock %}

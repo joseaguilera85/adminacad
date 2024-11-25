@@ -77,3 +77,7 @@ def send_email_view(request):
         return HttpResponse("Email sent successfully!")
     
     return render(request, 'send_email.html')
+
+
+
+#-------------------

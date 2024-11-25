@@ -33,6 +33,10 @@ urlpatterns = [
     ### 2.4 Dashboard
     path('dashboard/', dashboard_view, name='dashboard'),
 
+    ### 2.5 Eventos
+    path('events/create/', views.create_event, name='create_event'), 
+    path('events/', views.event_list, name='event_list'),
+
 ]
 
 # Global error handler

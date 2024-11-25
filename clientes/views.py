@@ -231,8 +231,6 @@ def custom_403(request, exception=None):
 
 #==================
 
-# views.py
-# views.py
 from django.shortcuts import render
 from django.db.models import Count, F, Q  # Add F and Q imports
 from .models import Cliente
@@ -286,3 +284,62 @@ def dashboard_view(request):
     }
 
     return render(request, 'clientes/dashboard.html', context)
+
+#==================
+
+
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import Group
+from .models import Event, Cliente
+from .forms import EventForm
+from django.core.mail import send_mail
+from django.conf import settings
+
+@login_required
+def create_event(request):
+    # Ensure the user belongs to the 'ventas' group
+    if not request.user.groups.filter(name='Ventas').exists():
+        return render(request, 'clientes/403.html', {"message": "You do not have permission to create events."})
+    
+    if request.method == 'POST':
+        form = EventForm(request.POST)
+        # Set the correct queryset for the invited_clients field before validating
+        form.fields['invited_clients'].queryset = Cliente.objects.all()  # No filtering applied
+        
+        if form.is_valid():
+            event = form.save(commit=False)
+            event.creator = request.user
+            event.save()
+            invited_clients = form.cleaned_data['invited_clients']
+            event.invited_clients.set(form.cleaned_data['invited_clients'])
+
+                        # Send email to each invited client
+            for client in invited_clients:
+                send_mail(
+                    subject=f"You are invited to {event.title}",  # Replace `event.name` with the event name field
+                    message=f"Dear {client.nombre},\n\nYou are invited to the event '{event.title}'. Please join us on {event.date}.",
+                    from_email=settings.DEFAULT_FROM_EMAIL,  # Make sure this is configured in your settings
+                    recipient_list=[client.mail],
+                    fail_silently=False,
+                )
+
+            return redirect('clientes:event_list')
+    else:
+        form = EventForm()
+        # Allow all clients to be listed for selection
+        form.fields['invited_clients'].queryset = Cliente.objects.all()
+
+    return render(request, 'clientes/create_event.html', {'form': form})
+
+
+#------------------
+
+from django.shortcuts import render
+from .models import Event
+
+def event_list(request):
+    # Fetch events created by the logged-in user
+    events = Event.objects.filter(creator=request.user).order_by('-date')
+
+    return render(request, 'clientes/event_list.html', {'events': events})

@@ -111,3 +111,22 @@ class Meeting(models.Model):
 
     class Meta:
         unique_together = ('client', 'date_time')
+
+# ----------------------------------------
+
+class Event(models.Model):
+    id_event = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
+    creator = models.ForeignKey(
+        User, 
+        on_delete=models.CASCADE, 
+        related_name='created_events', 
+        limit_choices_to={'groups__name': 'ventas'}  # Limits to users in the "ventas" group.
+    )
+    title = models.CharField(max_length=255)
+    description = models.TextField(blank=True, null=True)
+    date = models.DateTimeField()
+    location = models.CharField(max_length=255, blank=True, null=True)
+    created_at = models.DateTimeField(default=timezone.now)
+
+    # Many-to-many relationship with Cliente
+    invited_clients = models.ManyToManyField(Cliente, related_name='events', blank=True)

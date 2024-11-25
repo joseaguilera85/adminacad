@@ -67,3 +67,22 @@ class MeetingForm(forms.ModelForm):
         if commit:
             instance.save()
         return instance
+
+
+#---------------------
+
+from django import forms
+from .models import Event, Cliente
+
+class EventForm(forms.ModelForm):
+    # Add invited clients field with a multiple-choice widget
+    invited_clients = forms.ModelMultipleChoiceField(
+        queryset=Cliente.objects.none(),  # Filter queryset dynamically in the view
+        widget=forms.CheckboxSelectMultiple,
+        required=False,
+        label="Invite Clients"
+    )
+    
+    class Meta:
+        model = Event
+        fields = ['title', 'description', 'date', 'location', 'invited_clients']

@@ -14,6 +14,6 @@ urlpatterns = [
     path('menu/', views.menu, name='menu'),
     path("register/", register_user, name="register_user"),
     path('change-password/', CustomPasswordChangeView.as_view(), name='change_password'),
-    path('send-email/', send_email_view, name='send_email'),
+    path('send-email/', send_email_view, name='send_email')
 
 ]
