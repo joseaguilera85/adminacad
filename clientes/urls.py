@@ -21,8 +21,12 @@ urlpatterns = [
     path('delete/<uuid:client_id>/', views.delete_client, name='delete_client'),  # Delete client URL
     path('cliente/<uuid:id_cliente>/', views.client_detail, name='client_detail'),
     
-    ### 2.2 Interacciones ###
+    ### 2.2 Oportunidades e Interacciones ###
+    path('oportunidades/', views.lista_oportunidades, name='lista_oportunidades'),
+    path('crear_oportunidad/<uuid:id_cliente>/', views.create_oportunidad, name='create_oportunidad'),
     path('cliente/<uuid:id_cliente>/add_interaction/', views.add_interaction, name='add_interaction'),
+    path('review_interacciones/<uuid:id_oportunidad>/', views.review_interacciones, name='review_interacciones'),
+    path('ajax/load-oportunidades/', views.load_oportunidades, name='ajax_load_oportunidades'), 
     
     ### 2.3 Citas ###
     path('meetings/', meeting_list, name='meeting_list'),  # New URL for meeting list

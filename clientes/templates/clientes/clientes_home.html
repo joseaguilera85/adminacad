@@ -1,0 +1,44 @@
+{% extends "base_dashboard.html" %}
+{% load humanize %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'clientes/css/styles.css' %}">
+
+<div class="container-fluid mt-5">
+    <h1 class="text-center mb-5 custom-brown-text">CRM</h1>
+    
+    <!-- Flex Container for Left and Right Sections -->
+    <div class="d-flex" style="gap: 15px; align-items: flex-start;">
+        <!-- Left Container: Buttons -->
+        <div class="left-container" style="width: 15%; min-width: 100px; background-color: #f8f9fa; padding: 15px; box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.1); position: sticky; top: 0; height: 100vh; overflow-y: auto;">
+            {% if user.is_authenticated %}
+            <div class="d-grid gap-3">
+                <a href="{% url 'clientes:new_client' %}" class="btn custom-brown-btn">Nuevos registros</a>
+                <a href="{% url 'clientes:consult_clients' %}" class="btn custom-brown-btn">Directorio de Clientes</a>
+                <a href="{% url 'clientes:lista_oportunidades' %}" class="btn custom-brown-btn">Tablero de Oportunidades</a>
+                <a href="{% url 'clientes:dashboard' %}" class="btn custom-brown-btn">Dashboard</a>
+                <a href="{% url 'clientes:meeting_list' %}" class="btn custom-brown-btn">Registro de citas</a>
+                <a href="{% url 'clientes:event_list' %}" class="btn custom-brown-btn">Eventos</a>
+                <hr class="custom-hr my-2">
+            </div>
+            {% else %}
+            <div class="alert alert-warning text-center mt-5" role="alert">
+                Please <a href="{% url 'login' %}" class="alert-link">log in</a> to manage clients.
+            </div>
+            {% endif %}
+        </div>
+        
+        <!-- Right Container: Placeholder for other content -->
+        <div class="right-container" style="width: 85%; padding: 15px; overflow-y: auto; max-height: 100vh;">
+            <!-- Content to be added in child templates -->
+            {% block right_content %}
+            <div style="text-align: center; border: 2px dashed #ccc; padding: 50px;">
+                <p>No content available. Add your custom right content here.</p>
+            </div>
+            {% endblock %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

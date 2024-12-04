@@ -1,7 +1,7 @@
 # clientes/forms.py
 
 from django import forms
-from .models import Cliente, Project, Meeting
+from .models import Cliente, Oportunidad, Meeting, Event
 from .models import Interaction
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User, Group
@@ -10,22 +10,28 @@ from datetime import datetime
 #----------------------------------------
 
 class ClienteForm(forms.ModelForm):
-    # Add user-related fields to the form    
     class Meta:
         model = Cliente
-        fields = ['project', 'nombre', 'apellido', 'edad', 'celular', 'mail', 'modo_contacto', 'estatus', 'tipo_propiedad']
-        widgets = {
-            'modo_contacto': forms.Select(choices=[('redes', 'Redes'), ('fisico', 'Fisico')]),
-            'estatus': forms.Select(choices=[('lead', 'Lead'), ('cliente', 'Cliente'), ('inactivo', 'Inactivo')]),
-            'tipo_propiedad': forms.Select(choices=[('terreno', 'Terreno'), ('departamento', 'Departamento'), ('casa', 'Casa')]),
-        }
+        fields = ['nombre', 'apellido', 'edad', 'celular', 'mail']
 
+#----------------------------------------
+
+class OportunidadForm(forms.ModelForm):
+    class Meta:
+        model = Oportunidad
+        fields = ['project', 'estatus']
+        widgets = {
+            'estatus': forms.Select(choices=[
+                ('prospecto', 'Prospecto'),
+                ('en_progreso', 'En Progreso'),
+                ('cerrado', 'Cerrado')
+            ])}
 
 #----------------------------------------
 class InteractionForm(forms.ModelForm):
     class Meta:
         model = Interaction
-        fields = ['interaction_type', 'category', 'notes']
+        fields = ['oportunidad','salesperson', 'interaction_type', 'category', 'notes']
         widgets = {
             'notes': forms.Textarea(attrs={'rows': 3}),
         }
@@ -39,40 +45,62 @@ class SignUpForm(UserCreationForm):
 
 #----------------------------------------
 
+from django import forms
+from .models import Cliente, Oportunidad, Meeting
+from django.contrib.auth.models import User, Group
+from datetime import datetime
+
+from django import forms
+from django.forms import DateInput, TimeInput
+from django.contrib.auth.models import User, Group
+from .models import Meeting, Oportunidad
+from datetime import datetime
+
 class MeetingForm(forms.ModelForm):
-    # Add separate fields for date and time
-    meeting_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}), label='Meeting Date')
-    meeting_time = forms.TimeField(widget=forms.TimeInput(attrs={'type': 'time'}), label='Meeting Time')
+    meeting_date = forms.DateField(
+        widget=DateInput(attrs={'type': 'date'}),
+        label='Meeting Date'
+    )
+    meeting_time = forms.TimeField(
+        widget=TimeInput(attrs={'type': 'time'}),
+        label='Meeting Time'
+    )
 
     class Meta:
         model = Meeting
-        fields = ['client', 'salesperson', 'meeting_date', 'meeting_time']
+        fields = ['client', 'oportunidad', 'salesperson', 'meeting_date', 'meeting_time']
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, cliente_id=None, **kwargs):
+        """
+        Initialize the form with a custom cliente_id to filter the 'oportunidad' field.
+        """
         super().__init__(*args, **kwargs)
-        # Filter salespersons to only active users in the "Ventas" group
-        ventas_group = Group.objects.get(name='Ventas')  # Get the Ventas group
+        ventas_group = Group.objects.get(name='Ventas')
         self.fields['salesperson'].queryset = User.objects.filter(
             groups=ventas_group,
             is_active=True
         )
-
+        
     def save(self, commit=True):
-        # Save the meeting instance with the combined date and time
+        """
+        Override the save method to combine meeting_date and meeting_time into a single datetime.
+        """
         instance = super().save(commit=False)
-        # Combine the date and time into the date_time field
-        meeting_datetime = datetime.combine(self.cleaned_data['meeting_date'], self.cleaned_data['meeting_time'])
+        
+        # Combine date and time fields into a single datetime field
+        meeting_datetime = datetime.combine(
+            self.cleaned_data['meeting_date'],
+            self.cleaned_data['meeting_time']
+        )
         instance.date_time = meeting_datetime
 
         if commit:
             instance.save()
+        
         return instance
 
 
 #---------------------
-
-from django import forms
-from .models import Event, Cliente
 
 class EventForm(forms.ModelForm):
     # Add invited clients field with a multiple-choice widget

@@ -1,0 +1,47 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center">
+        <h1>Lista de Oportunidades</h1>
+        <a href="{% url 'clientes:clientes_home' %}" class="btn custom-brown-btn btn-sm">Volver al Inicio</a>
+    </div>
+
+    <div class="card mt-4">
+        <div class="card-body">
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>Cliente</th>
+                        <th>Proyecto</th>
+                        <th>Fecha de Creación</th>
+                        <th>Estatus</th>
+                        <th>Última Interacción</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for opp in oportunidades %}
+                        <tr>
+                            <td>{{ opp.cliente.nombre }}</td>
+                            <td>{{ opp.project }}</td>
+                            <td>{{ opp.created_at|date:"Y-m-d" }}</td>
+                            <td>{{ opp.estatus|capfirst }}</td>
+                            <td>{{ opp.last_interaction|date:"Y-m-d H:i" }}</td>
+                            <td>
+                                <a href="{% url 'clientes:review_interacciones' opp.id_oportunidad %}" class="btn custom-brown-btn btn-sm">Review Interacciones</a>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-center text-muted">No hay oportunidades aún.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<link rel="stylesheet" href="{% static 'clientes/css/styles.css' %}">
+{% endblock %}

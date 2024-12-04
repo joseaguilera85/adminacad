@@ -7,7 +7,6 @@
     --secondary-color: #6F4E37; /* Darker Brown */
     --background-color: #F5F5F5; /* Light Background */
     --text-color: #333333; /* Text */
-    --border-color: #DEE2E6; /* Border */
     --muted-text-color: #7D7D7D; /* Muted Text */
     --project-card-background: #D7CCC8; /* Light Coffee-Brown */
     --project-card-shadow: rgba(0, 0, 0, 0.1); /* Shadow */
@@ -57,17 +56,29 @@ h3 {
 }
 
 /* ==============================
-   Custom Buttons
+   Buttons Styles
    ============================== */
-   .custom-brown-btn {
+
+/* General Button Styles */
+.custom-brown-btn, 
+.btn-sm, 
+.btn-success, 
+.btn-delete {
+    text-decoration: none;
+    border-radius: 4px;
+    padding: 0.25rem 0.5rem;
+    font-size: 1.25rem; /* Slightly smaller font size for small buttons */
+}
+
+/* Custom Brown Button */
+.custom-brown-btn {
     background-color: var(--primary-color);
     color: #fff;
     border: 1px solid var(--primary-color);
-    padding: 0.5rem 0.5rem; /* Slightly smaller padding for better proportions */
-    border-radius: 20px;
-    font-size: var(--font-size-medium);
+    padding: 0.25rem;
+    border-radius: 2px;
+    font-size: 0.875rem; /* Smaller font size */
     transition: background-color 0.3s, border-color 0.3s;
-    text-decoration: none; 
 }
 
 .custom-brown-btn:hover {
@@ -76,12 +87,11 @@ h3 {
     color: #fff;
 }
 
-/* Small Buttons */
+/* Small Button */
 .btn-sm {
-    padding: 0.25rem 0.5rem;
+    padding: 0.25rem;
     font-size: 1.25rem; /* Slightly smaller font size */
     border-radius: 4px; /* Less rounded for smaller buttons */
-    text-decoration: none; 
 }
 
 /* Success Button Override */
@@ -89,7 +99,6 @@ h3 {
     background-color: #28a745; /* Default Bootstrap green */
     color: #fff;
     border: 1px solid #28a745;
-    text-decoration: none; 
 }
 
 .btn-success:hover {
@@ -102,7 +111,6 @@ h3 {
     background-color: #dc3545; /* Bootstrap red */
     color: #fff;
     border: 1px solid #dc3545;
-    text-decoration: none;
 }
 
 .btn-delete:hover {
@@ -145,12 +153,13 @@ h3 {
    ============================== */
 .container {
     margin-top: 1rem;
+    margin-bottom: 1rem;
 }
 
 /* ==============================
    Project Cards
    ============================== */
-   .project-card {
+.project-card {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -161,31 +170,41 @@ h3 {
 }
 
 .project-image-container {
-    flex: 0 0 150px; /* Fixed width for the image */
-    margin-right: 20px;
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    margin: 0 auto;
 }
 
 .project-image {
     width: 100%;
     height: auto;
+    object-fit: cover;
     border-radius: 8px;
 }
 
 .project-info {
-    flex-grow: 1; /* Makes the project info take up the remaining space */
+    flex-grow: 1;
     text-align: center;
+    margin-bottom: 30px;
 }
 
 .project-buttons {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end; /* Aligns buttons to the right */
+    flex-direction: row;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
 }
 
-.project-buttons .btn {
-    margin-bottom: 10px;
+.project-buttons a {
+    text-decoration: none;
+    padding: 6px 6px;
+    border-radius: 5px;
 }
 
+.project-buttons a:last-child {
+    margin-bottom: 0;
+}
 
 /* ==============================
    Custom Separator
@@ -194,66 +213,50 @@ h3 {
     border: 0;
     height: 2px;
     background-color: var(--secondary-color);
-    margin: 5px; 
+    margin: 5px;
 }
 
 /* ==============================
-   Apartment Table Styles
+   Table Styles
    ============================== */
-   .table {
+.table {
     width: 100%;
     margin-top: 1rem;
-    border-collapse: collapse;
-    background-color: #fff;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Add slight shadow to the table */
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
 }
 
-/* Table Header */
-.table th {
+.table-bordered {
+    border: 1px solid var(--border-color);
+}
+
+.table thead {
     background-color: var(--primary-color);
-    color: #fff;
-    font-size: var(--font-size-medium);
-    font-weight: bold;
-    padding: 0.75rem 1rem;
-    text-align: left;
+    color: white;
 }
 
-.table th:first-child {
-    border-top-left-radius: 8px; /* Rounded corners for the first column */
-}
-
-.table th:last-child {
-    border-top-right-radius: 8px; /* Rounded corners for the last column */
-}
-
-/* Table Body */
-.table td {
-    padding: 0.75rem 1rem;
-    border-top: 1px solid var(--border-color);
-}
-
-.table td:first-child {
-    font-weight: bold;
-}
-
-/* Hover Effect for Table Rows */
-.table tbody tr:hover {
-    background-color: #f8f8f8;
-}
-
-/* Last Row Styling */
-.table tbody tr:last-child td {
-    border-bottom: 2px solid var(--primary-color); /* Adds a bottom border to the last row */
-}
-
-/* Action Buttons */
-.table td a, .table td form button {
-    margin-right: 5px;
-}
-
-/* Apply this style to all table headers and table data */
-.table th, .table td {
+.table thead th {
+    padding: 0.75rem;
+    font-size: 1rem;
     text-align: center;
+}
+
+.table tbody td {
+    padding: 0.75rem;
+    text-align: center;
+    font-size: 1.2rem;
+}
+
+.table tbody tr:hover {
+    background-color: #E3D0B8;
+}
+
+.table td a {
+    text-decoration: none;
+}
+
+.table td form {
+    display: inline-block;
 }
 
 /* ==============================

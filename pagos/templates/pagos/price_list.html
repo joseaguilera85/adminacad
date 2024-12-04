@@ -1,14 +1,19 @@
-{% extends "base_bootstrap.html" %}
+{% extends "pagos/admin_venta_menu.html" %}
+{% load static %}
+{% load humanize %}
 
-{% block content %}
-<div class="container mt-5">
+{% block right_content %}
+<link rel="stylesheet" href="{% static 'pagos/css/apartment_detail.css' %}">
+
+<div class="d-flex justify-content-between align-items-center">
     <h1>Price List</h1>
-    <a href="{% url 'pagos:payments_index' %}" class="btn btn-primary">Volver al menú</a>
+</div>
 
+<div class="container mt-5">
     <!-- Project Filter -->
     <form method="GET" class="mb-3">
         <div class="form-group">
-            <label for="project">Select Project:</label>
+            <label for="project" class="form-label">Select Project:</label>
             <select id="project" name="project" class="form-control" onchange="this.form.submit()">
                 <option value="">All Projects</option>
                 {% for project in projects %}
@@ -19,6 +24,7 @@
             </select>
         </div>
     </form>
+</div>
 
     <!-- Price List Table -->
     <table class="table table-bordered">
@@ -97,8 +103,7 @@
                         </td>
                     {% endwith %}
                     <td>
-                        <a href="{% url 'pagos:edit_price_list_values' apartment.id %}" class="btn btn-primary">Edit Values</a>
-                        <a href="{% url 'pagos:edit_current_price_list_index' apartment.id %}" class="btn btn-primary">Edit Index</a>
+                        <a href="{% url 'pagos:edit_price_list_values' apartment.id %}" class="btn custom-brown-btn btn-sm">Edit Values</a>
 
                     </td>
                 </tr>

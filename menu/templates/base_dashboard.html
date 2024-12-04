@@ -5,40 +5,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Pepe Software - Your solution for managing clients and projects efficiently.">
+    <meta name="description" content="Edge RealEstate - Your solution for managing clients and projects efficiently.">
     <link rel="stylesheet" href="{% static 'menu/css/styles.css' %}">
-    <title>Pepe Software</title>
+    <title>Edge RealEstate</title>
 </head>
 <body>
     <!-- Header Section -->
     <header>
         <nav>
-            <a href="{% url 'menu:menu' %}" aria-label="Home">
-                <span class="logo-text">Pepe Software</span>
-            </a>
+            <a href="{% url 'menu:menu' %}" aria-label="Home"> <img src="/media/media/menu/logo2.png" alt="Edge RealEstate Logo" class="logo"> </a>
+            <div class="nav-right">
+                <div>
+                <span>Hola, {{ user.username }}</span></div>
+                <div><a href="{% url 'clientes:logout' %}" aria-label="Logout">Logout</a></div>
         </nav>
-        <nav>
-            <span>Hola, {{ user.username }}</span>
-            <a href="{% url 'clientes:logout' %}" aria-label="Logout">Logout</a>
-        </nav>
+
     </header>
 
-    <!-- Main Content Section -->
-    <main>
-        <hr class="custom-hr my-4">
+<!-- Main container that wraps the entire page -->
+<div class="main-container">
+    <hr class="custom-hr my-4">
+    <!-- Content Section -->
+    <div class="content">
         {% block content %}
-            <p>No content available. Please check back later.</p>
+        <!-- Your content here -->
         {% endblock %}
-    </main>
+    </div>
 
     <!-- Footer Section -->
     <div class="footer-container">
-    {% block footer %}
-    <footer class="footer">
-
-        <p>Copyright</p>
-    </footer>
-    {% endblock %}
+        {% block footer %}
+        <footer class="footer">
+            <p>Copyright</p>
+        </footer>
+        {% endblock %}
+    </div>
 </div>
 </body>
 </html>

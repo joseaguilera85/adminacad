@@ -1,0 +1,40 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center">
+        <h1>Interacciones para Oportunidad: {{ oportunidad }}</h1>
+        <a href="{% url 'clientes:client_detail' oportunidad.cliente.id_cliente %}" class="btn btn-secondary">Volver al Cliente</a>
+    </div>
+
+    <div class="card mt-4">
+        <div class="card-header bg-primary text-white">
+            <h3>Información de la Oportunidad</h3>
+        </div>
+        <div class="card-body">
+            <p><strong>Cliente:</strong> {{ oportunidad.cliente.nombre }}</p>
+            <p><strong>Proyecto:</strong> {{ oportunidad.project }}</p>
+            <p><strong>Fecha de Creación:</strong> {{ oportunidad.created_at }}</p>
+            <p><strong>Estatus:</strong> {{ oportunidad.estatus }}</p>
+        </div>
+    </div>
+
+    <hr style="border: 0; height: 3px; background-color: black;">
+
+    <h3 class="mt-4">Interacciones</h3>
+    <ul class="list-group">
+        {% for interaction in interactions %}
+            <li class="list-group-item">
+                <strong>{{ interaction.date|date:"Y-m-d" }}</strong><br> 
+                <strong>{{ interaction.interaction_type }}:</strong> 
+                {{ interaction.category }}
+                <p class="mt-2">{{ interaction.notes }}</p>
+            </li>
+        {% empty %}
+            <li class="list-group-item text-muted">No interacciones yet.</li>
+        {% endfor %}
+    </ul>
+</div>
+<link rel="stylesheet" href="{% static 'clientes/css/styles.css' %}">
+{% endblock %}

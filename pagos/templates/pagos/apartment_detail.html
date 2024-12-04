@@ -1,29 +1,41 @@
-<!-- templates/apartment_detail.html -->
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detalles del Departamento {{ apartment.number }}</title>
-    {% load static %}
+{% extends "base_dashboard.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+<div class="container mt-4">
     <link rel="stylesheet" href="{% static 'pagos/css/apartment_detail.css' %}">
-</head>
-<body>
-    <div class="apartment-detail">
-        <h1>Departamento {{ apartment.number }}</h1>
+    
+    <h1 class="mb-4">Detalles del Departamento {{ apartment.number }}</h1>
 
-        <div class="info">
-            <p><strong>Tipología:</strong> {{ apartment.tipologia }}</p>
-            <p><strong>Área:</strong> {{ apartment.area }} m²</p>
-            <p><strong>Precio por m²:</strong> ${{ apartment.price_per_m2 }} MXN</p>
-            <p><strong>Precio Total:</strong> ${{ apartment.total_price }} MXN</p>
-            <p><strong>Estado:</strong> {{ apartment.get_status_display }}</p>
-        </div>
-
-        <div class="actions">
-            <a href="{% url 'plan_edificio' %}" class="back-link">← Volver al Plano del Edificio</a>
-            <a href="#" class="contact-link">Contáctanos para más información</a>
+    <!-- Image Section -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            {% if apartment.image %}
+                <img src="{{ apartment.image.url }}" alt="Imagen del Departamento {{ apartment.number }}" class="img-fluid rounded">
+            {% else %}
+                <p class="text-muted">No image available for this apartment.</p>
+            {% endif %}
         </div>
     </div>
-</body>
-</html>
+
+    <!-- Info Section -->
+    <div class="row">
+        <div class="col-md-6">
+            <p><strong>Tipología:</strong> {{ apartment.tipologia }}</p>
+            <p><strong>Área:</strong> {{ apartment.area|floatformat:2 }} m²</p>
+
+            {% if error_message %}
+                <p class="text-danger"><strong>Error:</strong> {{ error_message }}</p>
+            {% else %}
+                <p><strong>Precio por m²:</strong> ${{ precio_por_m2|floatformat:0|intcomma }} MXN</p>
+                <p><strong>Precio Total:</strong> ${{ total_price|floatformat:0|intcomma }} MXN</p>
+            {% endif %}
+            
+            <p><strong>Estado:</strong> {{ apartment.get_status_display }}</p>
+        </div>
+    </div>
+
+    <a href="{% url 'pagos:inventario' %}" class="btn btn-secondary mt-4">Regresar al Inventario</a>
+</div>
+{% endblock %}

@@ -45,12 +45,24 @@ class PaymentRecord(models.Model):
     mes_inicio = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='payment_records', null=True, blank=True)
-    payment_schedule = models.JSONField(default=dict)
 
     def set_cliente(self, cliente):
         self.cliente = cliente
         self.save()
 
+#--------------------------------
+
+class PaymentInstallment(models.Model):
+    payment_record = models.ForeignKey(PaymentRecord, on_delete=models.CASCADE, related_name='installments')
+    installment_number = models.IntegerField()
+    due_date = models.DateField()
+    total_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    amount_paid = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    fully_paid = models.BooleanField(default=False)
+
+    def update_payment_status(self):
+        self.fully_paid = self.amount_paid >= self.total_amount
+        self.save()
 #--------------------------------
 
 class PriceList(models.Model):
@@ -129,3 +141,50 @@ class AccountStatement(models.Model):
         # Calcular el balance como total adeudado menos el total pagado
         self.balance_due = self.total_due - self.total_paid
         self.save()
+
+
+#-------------
+
+# models.py
+from django.db import models
+import json
+
+class House(models.Model):
+    name = models.CharField(max_length=100)  # Name of the house
+    color = models.CharField(max_length=30)  # Color of the house (e.g., hex code or RGB)
+    points = models.JSONField()  # Store the points of the polygon (e.g., [(x1, y1), (x2, y2), ...])
+
+    def __str__(self):
+        return self.name
+
+    def get_points(self):
+        return self.points
+
+    def calculate_area(self):
+        """
+        Calculate the area of the polygon using the Shoelace formula.
+        """
+        coordenadas = self.get_points()
+        n = len(coordenadas)
+        if n < 3:
+            return 0  # Not a polygon
+
+        area = 0
+        for i in range(n):
+            x1, y1 = coordenadas[i]
+            x2, y2 = coordenadas[(i + 1) % n]
+            area += x1 * y2 - x2 * y1
+        return abs(area) / 2
+
+    def calculate_dimensions(self):
+        """
+        Calculate the width and height of the bounding box of the polygon.
+        """
+        coordenadas = self.get_points()
+        x_min = min(point[0] for point in coordenadas)
+        x_max = max(point[0] for point in coordenadas)
+        y_min = min(point[1] for point in coordenadas)
+        y_max = max(point[1] for point in coordenadas)
+        width = x_max - x_min
+        height = y_max - y_min
+        return width, height

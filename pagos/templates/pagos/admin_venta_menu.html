@@ -1,0 +1,63 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'pagos/css/apartment_detail.css' %}">
+
+<div class="container-fluid mt-5">
+    <h1 class="text-center mb-5">Administración de la venta</h1>
+    
+    <!-- Flex Container for Left and Right Sections -->
+    <div class="d-flex" style="gap: 15px; align-items: flex-start;">
+    
+        {% if is_cliente %}
+        <!-- Show only for "Cliente" group -->
+        <div class="left-container" style="width: 15%; min-width: 100px; background-color: #f8f9fa; padding: 15px; box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.1); position: sticky; top: 0; height: fit-content;">
+            <!-- Left Container: Buttons -->
+            <div class="card shadow-sm mb-3">
+                <div style="margin-bottom: 15px;">
+                    <a href="{% url 'pagos:list_payment_records' %}" class="btn custom-brown-btn btn-sm">3.5 Estado de cuenta</a>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="left-container" style="width: 15%; min-width: 100px; background-color: #f8f9fa; padding: 15px; box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.1); position: sticky; top: 0; height: fit-content;">
+            <!-- Card -->
+            <div class="card shadow-sm mb-3">
+                <div style="margin-bottom: 15px;">
+                    <a href="{% url 'pagos:price_list' %}" class="btn custom-brown-btn btn-sm">3.1 Lista de precios</a>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <a href="{% url 'pagos:inventario' %}" class="btn custom-brown-btn btn-sm">3.2 Inventarios</a>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <a href="{% url 'pagos:plano' %}" class="btn custom-brown-btn btn-sm">3.2b Vista plano</a>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <a href="{% url 'pagos:cotizacion' %}" class="btn custom-brown-btn btn-sm">3.3 Cotización</a>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <a href="{% url 'pagos:lista_departamentos' %}" class="btn custom-brown-btn btn-sm">3.4 Apartado y Venta</a>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <a href="{% url 'pagos:list_payment_records' %}" class="btn custom-brown-btn btn-sm">3.5 Estado de cuenta</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        
+        <!-- Right Container: Placeholder for other content -->
+        <div class="right-container" style="width: 85%; padding: 15px;">
+            <!-- Insert the content of the specific page here -->
+            {% block right_content %}
+                <!-- Default content in case no specific page content is provided -->
+                <div style="text-align: center; border: 2px dashed #ccc; padding: 50px;">
+                    <p style="font-size: 18px; color: #666;">This area is reserved for other content.</p>
+                </div>
+            {% endblock %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

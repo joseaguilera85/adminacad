@@ -13,17 +13,23 @@ urlpatterns = [
 
     #### 3.2a Inventario ####
     path('inventario/', views.inventario_view, name='inventario'),
-    
+    path('apartamento/<int:apartment_number>/', views.apartment_detail, name='apartment_detail'),
+
     #### 3.2b Vista edificio ####
-    path('plan-edificio/', views.plan_edificio_view, name='plan_edificio'),
-    path('plan-edificio/apartamento/<int:apartment_number>/', views.apartment_detail, name='apartment_detail'),
+    path('canva/', views.plano, name='plano'),
+    path('canva/add/', views.add_house, name='add_house'),
+    path("canva/edit/<int:pk>/", views.edit_house, name="edit_house"),
+    path('canva/delete/<int:pk>/', views.delete_house, name='delete_house'),  # Add the delete URL
+    path('canva/upload/', views.upload_excel, name='upload_excel'),
+    path('canva/delete_all_houses/', views.delete_all_houses, name='delete_all_houses'),
+    
 
     #### 3.3 Cotización ###
-    path('cotizacion/', views.select_apartment_view, name='cotizacion'), # COTIZACION
+    path('cotizacion/', views.cotizacion, name='cotizacion'), # COTIZACION
     path('plan-pagos/', views.payment_plan_view, name='plan_pagos'),  # Ruta para 'plan-pagos/'
     
     #### 3.4 Proceso de venta o apartado ###
-    path('venta/', views.review_apartments_view, name='lista_departamentos'),
+    path('venta/', views.apartado_venta, name='lista_departamentos'),
     path('venta/<int:apartment_id>/', views.ventas, name='venta'),
     path('apartar/<int:apartment_id>/', views.apartar, name='apartar'),
     path('disponible/<int:apartment_id>/', views.disponible_view, name='disponible'),
@@ -33,11 +39,13 @@ urlpatterns = [
     path('record/<int:pk>/', views.record_detail_view, name='record_detail'), #Detalle de pan de pagos
     path('delete/<int:id>/', views.delete_record, name='delete_record'),
     path('register/<int:payment_record_id>/', views.register_payment, name='register_payment'),
-    path('account-statement/<int:payment_record_id>/', views.account_statement, name='account_statement'),
+    
+    path('toggle-payment/<int:installment_id>/', views.toggle_payment_status, name='toggle_payment'),
+    path('cancel-payment/<int:installment_id>/', views.cancel_payment, name='cancel_payment'),
+
     
     #### Otros ###
     path('clientes/', views.cliente_list_view, name='lista_clientes'),
-    path('calculate-npv/<int:payment_record_id>/', views.CalculateNPVView.as_view(), name='calculate_npv')
 
     
 ]

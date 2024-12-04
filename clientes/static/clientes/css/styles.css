@@ -56,7 +56,7 @@ h1, h2, h3 {
 /* ==============================
    Custom Buttons
    ============================== */
-.custom-brown-btn {
+   .custom-brown-btn {
     background-color: var(--primary-color);
     color: #fff;
     border: 1px solid var(--primary-color);
@@ -66,6 +66,9 @@ h1, h2, h3 {
     transition: background-color 0.3s, border-color 0.3s;
     text-decoration: none; 
     margin-left: 5px; /* Add space to the left of each button */
+    margin-bottom: 10px;
+    margin-top: 5px;
+    display: block; /* Ensure buttons are full-width */
 }
 
 .custom-brown-btn:hover {
@@ -151,10 +154,11 @@ h1, h2, h3 {
 .table tbody td {
     padding: 0.75rem;
     text-align: center;
+    font-size: 1.2rem; /* Body text font size */
 }
 
 .table tbody tr:hover {
-    background-color: #f8f9fa;
+    background-color: #E3D0B8;
 }
 
 .table td a {
@@ -324,7 +328,7 @@ h5.display-2 {
 }
 
 .form-label {
-    font-size: 1.1rem; /* Increase label font size */
+    font-size: 1.5rem; /* Increase label font size */
     color: #333; /* Dark text color for readability */
     font-weight: bold; /* Make labels stand out */
 }

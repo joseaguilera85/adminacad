@@ -40,3 +40,22 @@ class PriceListForm(forms.ModelForm):
     class Meta:
         model = PriceList
         fields = ['current_list_price_index', 'list_number_0', 'list_number_1', 'list_number_2', 'list_number_3', 'list_number_4', 'list_number_5']
+
+
+#-------------------------
+
+from django import forms
+from .models import House
+
+class HouseForm(forms.ModelForm):
+    class Meta:
+        model = House
+        fields = ['name', 'color', 'points']  # Only these fields are needed for irregular shapes
+        widgets = {
+            'points': forms.Textarea(attrs={'cols': 80, 'rows': 5, 'placeholder': 'Enter coordinates as a list of tuples, e.g., [(20, 20), (30, 30), (50, 50)]'}),
+        }
+
+
+#-----------------
+class CSVUploadForm(forms.Form):
+    csv_file = forms.FileField(label="Upload CSV", required=True)

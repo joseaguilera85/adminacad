@@ -5,16 +5,15 @@
 <div class="container mt-5">
     <h1>Schedule a Meeting</h1>
     
-<!-- Display messages -->
-{% if messages %}
-    <div>
-        {% for message in messages %}
-            <div class="alert mt-2" style="background-color: red; color: white; padding: 10px; border-radius: 5px;">
+    <!-- Display messages -->
+    {% if last_message %}
+        {% for message in last_message %}
+            <div class="alert mt-2 alert-{{ message.tags }} alert-dismissible fade show" role="alert">
                 {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         {% endfor %}
-    </div>
-{% endif %}
+    {% endif %}
     
     <form method="POST" action="{% url 'clientes:schedule_meeting' %}">
         {% csrf_token %}
@@ -44,6 +43,7 @@
             <a href="{% url 'clientes:clientes_home' %}" class="btn custom-brown-btn btn-sm">Cancel</a>
         </div>
     </form>
-    
+</div>
+
 <link rel="stylesheet" href="{% static 'clientes/css/styles.css' %}">
 {% endblock %}

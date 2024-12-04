@@ -3,7 +3,6 @@ from apartments.models import Project
 from django.contrib.auth.models import User
 import uuid
 from django.utils import timezone
-from django.core.paginator import Paginator
 
 # ----------------------------------------
 
@@ -12,28 +11,30 @@ class Cliente(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='cliente_profile', null=True, blank=True)
     created_at = models.DateTimeField(default=timezone.now)
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name="created_clientes")
-
     nombre = models.CharField(max_length=255)
     apellido = models.CharField(max_length=255)
     edad = models.IntegerField()
     celular = models.CharField(max_length=15)
     mail = models.EmailField()
-
-    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='clientes', null=True, blank=True)
     
-    modo_contacto = models.CharField(max_length=50, default='N/A', choices=[
-        ('redes', 'Redes'),
-        ('fisico', 'Fisico'),
-    ])
+    def get_email(self):
+        return self.mail 
+
+    def __str__(self):
+        return f"{self.nombre} {self.apellido}"
+
+# ----------------------------------------
+
+class Oportunidad(models.Model):
+    id_oportunidad = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
+    cliente = models.ForeignKey('Cliente', on_delete=models.CASCADE, related_name='oportunidades')
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='oportunidades')
+    created_at = models.DateTimeField(default=timezone.now)
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name="created_oportunidades")
     estatus = models.CharField(max_length=50, choices=[
-        ('lead', 'Lead'),
-        ('cliente', 'Cliente'),
-        ('inactivo', 'Inactivo'),
-    ])
-    tipo_propiedad = models.CharField(max_length=50, choices=[
-        ('terreno', 'Terreno'),
-        ('departamento', 'Departamento'),
-        ('casa', 'Casa'),
+        ('prospecto', 'Prospecto'),
+        ('en_progreso', 'En Progreso'),
+        ('cerrado', 'Cerrado'),
     ])
 
     # New fields for interactions
@@ -41,11 +42,7 @@ class Cliente(models.Model):
     interaction_status = models.CharField(
         max_length=50, 
         default='No Interaction', 
-        choices=[
-            ('Recent', 'Recent'),
-            ('Stale', 'Stale'),
-            ('No Interaction', 'No Interaction'),
-        ]
+        choices=[('Recent', 'Recent'),('Stale', 'Stale'),('No Interaction', 'No Interaction')]
     )
 
     # Update interaction details
@@ -63,11 +60,9 @@ class Cliente(models.Model):
         
         self.save()
 
-    def get_email(self):
-        return self.mail 
-
     def __str__(self):
-        return f"{self.celular} {self.nombre} {self.apellido}"
+        return f"{self.cliente.nombre}  {self.project}"
+
 
 
 # ----------------------------------------
@@ -88,6 +83,7 @@ class Interaction(models.Model):
     ]
 
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, related_name='interactions')
+    oportunidad = models.ForeignKey(Oportunidad, on_delete=models.CASCADE, related_name='interactions', null=True, blank=True)
     salesperson = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     date = models.DateTimeField(auto_now_add=True)
     interaction_type = models.CharField(max_length=20, choices=INTERACTION_TYPES)
@@ -101,6 +97,7 @@ class Interaction(models.Model):
 
 class Meeting(models.Model):
     client = models.ForeignKey(Cliente, on_delete=models.CASCADE, related_name='meeting')
+    oportunidad = models.ForeignKey(Oportunidad, on_delete=models.CASCADE, related_name='meeting', null=True, blank=True)
     apellido = models.CharField(max_length=255)
     salesperson = models.ForeignKey(User, on_delete=models.CASCADE)
     date_time = models.DateTimeField()

@@ -1,0 +1,13 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+
+{% block content %}
+<h2>Registrar Nueva Oportunidad para {{ client.nombre }} {{ client.apellido }}</h2> 
+  <form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button class = "btn custom-brown-btn btn-sm" type="submit">Registrar</button>
+  </form>
+
+  <link rel="stylesheet" href="{% static 'clientes/css/styles.css' %}"> <!-- Link to your CSS file -->
+{% endblock %}

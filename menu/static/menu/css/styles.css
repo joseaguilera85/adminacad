@@ -27,7 +27,7 @@ body {
     background-color: var(--background-color);
     color: var(--text-color);
     font-family: var(--font-family);
-    font-size: var(--font-size-large);
+    font-size: var(--font-size-base);
 }
 
 nav {
@@ -42,7 +42,7 @@ nav {
 nav a {
     color: white;
     text-decoration: none;
-    font-size: 1rem;
+    font-size: var(--font-size-base);
     font-weight: bold;
 }
 
@@ -57,8 +57,10 @@ nav div {
     gap: 1rem;
 }
 
-nav div span {
-    font-size: 1rem;
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Space between username and logout link */
 }
 
 footer {
@@ -70,14 +72,14 @@ footer {
 }
 
 .footer-container {
-    background-color: #f8f9fa; /* Optional styling */
+    background-color: #f8f9fa; /* Optional: Background color for footer */
     padding: 10px;
     text-align: center;
 }
 
 footer p {
     margin: 0;
-    font-size: 1rem;
+    font-size: var(--font-size-base);
     font-family: var(--font-family);
 }
 
@@ -92,13 +94,143 @@ footer p {
     max-width: 1200px;
     margin: 0 auto;
     padding: 2rem;
-    background-color:  #4E342E;
+    background-color: var(--primary-color);
     border: 1px solid var(--border-color);
     border-radius: 8px;
 }
 
 .logo-text {
-    font-size: 2rem; /* Adjust as needed */
-    font-weight: bold; /* Make it bold */
-    color: --text-color; /* Optional: Define a color */
+    font-size: var(--font-size-xlarge);
+    font-weight: bold;
+    color: white;
+}
+
+.custom-brown-btn {
+    padding: 5px 10px; 
+    font-size: var(--font-size-small); 
+    width: auto; 
+}
+
+/* ==============================
+   Button Styles
+   ============================== */
+.button-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two equal-width columns */
+    gap: 40px;
+    max-width: 400px; /* Limit container width */
+    margin: 20px auto; /* Center the container */
+}
+
+/* Custom brown button styling */
+.brown-btn {
+    min-width: 150px;
+    min-height: 90px;
+    max-height: 100px;
+    background-color: var(--primary-color);
+    color: #fff;
+    border: 1px solid var(--primary-color);
+    padding: 1rem 2rem;
+    border-radius: 10px;
+    font-size: 1.25rem;
+    transition: background-color 0.3s, border-color 0.3s;
+    text-decoration: none; 
+    margin-left: 5px;
+    text-overflow: ellipsis;
+}
+
+.brown-btn:hover {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+    color: #fff;
+}
+
+/* Custom Brown Button */
+.custom-brown-btn {
+    background-color: var(--primary-color);
+    color: #fff;
+    border: 1px solid var(--primary-color);
+    padding: 0.25rem;
+    border-radius: 2px;
+    font-size: 0.875rem; /* Smaller font size */
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.custom-brown-btn:hover {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+    color: #fff;
+}
+
+/* ==============================
+   Paragraph Styles
+   ============================== */
+.custom-paragraph {
+    font-size: var(--font-size-xlarge);
+    font-family: var(--font-family); /* Consistent font */
+    font-weight: bold;
+    color: var(--primary-color); /* Primary color for text */
+    margin: 0;
+    padding: 10px 0; /* Vertical padding */
+}
+
+.logo {
+    max-width: 140px; /* Limit logo width */
+}
+
+/* ==============================
+   Grid Layout Styles
+   ============================== */
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 equal columns */
+    gap: 20px;
+}
+
+.grid-item {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border: 1px solid #ccc;
+}
+
+/* ==============================
+   Flexbox Styles
+   ============================== */
+.d-flex {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+/* ==============================
+   Layout Helpers
+   ============================== */
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+.main-container {
+    min-height: 80%;
+    display: flex;
+    flex-direction: column;
+}
+
+.content {
+    flex: 1; /* Take available space except footer */
+}
+
+/* ==============================
+   Footer Styles
+   ============================== */
+.footer-container {
+    background-color: #f1f1f1; /* Background for footer */
+    text-align: center;
+    padding: 10px;
+}
+
+footer {
+    background-color: #333;
+    color: white;
+    padding: 20px 0;
 }

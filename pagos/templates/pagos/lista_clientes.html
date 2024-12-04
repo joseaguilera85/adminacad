@@ -1,6 +1,10 @@
-{% extends "base_bootstrap.html" %}
+{% extends "base_dashboard.html" %}
+{% load static %}
+{% load humanize %}
 
 {% block content %}
+<link rel="stylesheet" href="{% static 'pagos/css/apartment_detail.css' %}">
+
     <h1>Lista de Clientes</h1>
     {% if error %}
         <div class="alert alert-danger">{{ error }}</div>

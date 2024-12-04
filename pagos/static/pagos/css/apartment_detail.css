@@ -1,49 +1,385 @@
-/* pagos/css/apartment_detail.css */
+/* ==============================
+   Global Styles
+   ============================== */
+   :root {
+    --primary-color: #4E342E; /* Coffee Brown color */
+    --secondary-color: #6F4E37; /* Darker Brown */
+    --background-color: #F5F5F5; /* Light background color */
+    --text-color: #333333; /* Text color */
+    --border-color: #DEE2E6; /* Border color */
+    --button-padding: 1.5rem 2rem;
+    --font-family: 'Roboto', sans-serif;
+    --button-max-width: 100px; /* Maximum width for buttons */
+}
+
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f9;
-    color: #333;
-    margin: 0;
-    padding: 20px;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    font-family: var(--font-family);
+    font-size: 11pt;
 }
 
-.apartment-detail {
-    max-width: 600px;
-    margin: 0 auto;
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+h1, h2, h3 {
+    font-family: var(--font-family);
+    font-weight: bold;
+    text-align: left;
 }
 
-h1 {
-    font-size: 24px;
-    margin-bottom: 10px;
-    color: #0077cc;
+.container {
+    margin-top: 10px; /* Reduce top margin */
 }
 
-.info p {
-    margin: 8px 0;
-    font-size: 16px;
-}
-
-.actions {
-    margin-top: 20px;
+.d-flex {
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 
-.back-link, .contact-link {
+.d-flex .form-control {
+    border: 1px solid #ccc;
+}
+
+.text-muted {
+    color: #7D7D7D; /* Gris pizarra */
+}
+
+.text-center {
+    text-align: center;
+}
+
+.custom-hr {
+    border: 0;
+    height: 2px;
+    background-color: var(--secondary-color); /* Darker brown separator */
+}
+
+/* ==============================
+   Custom Buttons
+   ============================== */
+.custom-brown-btn {
+    background-color: var(--primary-color);
+    color: #fff;
+    border: 1px solid var(--primary-color);
+    padding: 1rem 2rem; /* Increase padding for larger buttons */
+    border-radius: 20px;
+    font-size: 1.25rem; /* Increase font size */
+    transition: background-color 0.3s, border-color 0.3s;
+    text-decoration: none; 
+    margin-left: 5px; /* Add space to the left of each button */
+    margin-bottom: 10px;
+    margin-top: 5px;
+    display: block; /* Ensure buttons are full-width */
+}
+
+.custom-brown-btn:hover {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+    color: #fff;
+}
+
+/* Success Button Override */
+.btn-success {
+    background-color: #28a745; /* Default Bootstrap green */
+    color: #fff;
+    border: 1px solid #28a745;
+    padding: 1rem 2rem; /* Increase padding for larger buttons */
+    border-radius: 20px;
+    font-size: 1.25rem; /* Increase font size */
+    transition: background-color 0.3s, border-color 0.3s;
+    text-decoration: none; 
+    margin-left: 5px; /* Add space to the left of each button */
+    margin-bottom: 10px;
+    margin-top: 5px;
+    display: block; /* Ensure buttons are full-width */
+}
+
+.btn-success:hover {
+    background-color: #218838; /* Darker green */
+    border-color: #218838;
+}
+
+/* Delete Button Override */
+.btn-danger {
+    background-color: #dc3545; /* Bootstrap red */
+    color: #fff;
+    border: 1px solid #dc3545;
+    padding: 1rem 2rem; /* Increase padding for larger buttons */
+    border-radius: 20px;
+    font-size: 1.25rem; /* Increase font size */
+    transition: background-color 0.3s, border-color 0.3s;
+    text-decoration: none; 
+    margin-left: 5px; /* Add space to the left of each button */
+}
+
+.btn-danger:hover {
+    background-color: #c82333; /* Darker red */
+    border-color: #c82333;
+}
+
+/* Small Buttons */
+.btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 1.25rem; /* Slightly smaller font size */
+    border-radius: 4px; /* Less rounded for smaller buttons */
+    text-decoration: none; 
+}
+
+/* Remove underline from all buttons that are links */
+.btn-secondary {
+    text-decoration: none; /* Remove underline */
+}
+
+.button-container {
+    display: inline-flex;
+    gap: 8px; /* Adjust spacing between buttons */
+}
+
+/* ==============================
+   Table Styles
+   ============================== */
+.table {
+    width: 100%;
+    margin-top: 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+}
+
+.table-bordered {
+    border: 1px solid var(--border-color);
+}
+
+.table thead {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.table thead th {
+    padding: 0.75rem;
+    font-size: 1rem;
+    text-align: center;
+}
+
+.table tbody td {
+    padding: 0.75rem;
+    text-align: center;
+    font-size: 1.2rem; /* Body text font size */
+}
+
+.table tbody tr:hover {
+    background-color: #E3D0B8;
+}
+
+.table td a {
     text-decoration: none;
-    color: #0077cc;
-    font-weight: bold;
-    padding: 8px 12px;
-    border: 1px solid #0077cc;
-    border-radius: 4px;
+}
+
+.table td form {
+    display: inline-block;
+}
+
+/* ==============================
+   Form and Input Styles
+   ============================== */
+input[type="text"] {
+    border: 1px solid #ccc;
+    padding: 0.5rem;
+    font-size: 1rem;
+    border-radius: 5px;
+    width: 300px;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.5rem 1.5rem;
+    border: none;
+    border-radius: 5px;
     transition: background-color 0.3s;
 }
 
-.back-link:hover, .contact-link:hover {
-    background-color: #0077cc;
+.btn-primary:hover {
+    background-color: var(--secondary-color);
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+    padding: 0.5rem 1.5rem;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+/* ==============================
+   Responsive Design
+   ============================== */
+@media (min-width: 768px) {
+    .d-flex {
+        justify-content: space-between;
+    }
+}
+
+/* ==============================
+   Typography
+   ============================== */
+h5.display-2 {
+    font-size: 1rem;
+}
+
+/* ==============================
+   Custom Brown Text
+   ============================== */
+.custom-brown-text {
+    color: var(--primary-color); /* Coffee Brown text */
+    font-size: 36px; /* Fixed font size */
+}
+
+/* ==============================
+   Week Calendar Styles
+   ============================== */
+
+.week-calendar-row {
+    margin-bottom: 1rem;
+}
+
+/* Ensure the week calendar uses a grid layout */
+.week-calendar {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+/* Each column takes an equal share of the row */
+.custom-col {
+    max-width: calc(100% / 7); /* Ensure exactly 7 columns */
+    min-width: 120px; /* Minimum width for responsiveness */
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    padding: 10px;
+}
+
+/* ==============================
+   Meeting List Styles
+   ============================== */
+   .meeting-list {
+    margin-top: 1rem;
+    padding: 0;
+    list-style: none;
+}
+
+.meeting-item {
+    margin-bottom: 1rem;
+    padding: 10px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Text inside meeting-item */
+.meeting-item strong {
+    display: block;
+    font-size: 1.1rem;
+    color: var(--primary-color); /* Coffee Brown color for emphasis */
+    margin-bottom: 0.25rem; /* Space below the name */
+}
+
+.meeting-item em {
+    font-size: 0.9rem;
+    color: var(--text-color); /* Slightly muted color for salesperson */
+    display: block;
+}
+
+.meeting-item small {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--text-color);
+    margin-top: 0.5rem;
+}
+
+/* Buttons in the meeting-item */
+.meeting-item a,
+.meeting-item button {
+    font-size: 0.85rem;
+    padding: 0.25rem 0.75rem;
+    margin-right: 0.5rem; /* Space between buttons */
+    border-radius: 5px;
+}
+
+.meeting-item .btn-primary {
+    background-color: var(--primary-color);
     color: #fff;
 }
+
+.meeting-item .btn-primary:hover {
+    background-color: var(--secondary-color);
+}
+
+.meeting-item .btn-danger {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+.meeting-item .btn-danger:hover {
+    background-color: #c82333;
+}
+
+
+/* General Form Styles */
+.form-group {
+    margin-bottom: 1.5rem; /* Space between form fields */
+    font-size: 1.5rem; /* Increased font size for better readability */
+    padding: 1rem; /* Add padding for better spacing */
+    background-color: var(--secondary-color); /* Secondary color for the background */
+    border: 1px solid var(--border-color); /* Border color */
+    border-radius: 10px; /* Slightly rounded corners for consistency */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    color: white;
+}
+
+/* Updated Label Styles */
+.form-label {
+    font-size: 1.5rem; /* Increased font size for better readability */
+    font-weight: bold; /* Emphasize the label */
+    color: white; /* Ensure text color is white */
+    margin-bottom: 0.5rem; /* Space between label and input */
+    display: block; /* Ensure label is on its own line */
+    text-transform: uppercase; /* Optional: Transform text to uppercase for emphasis */
+    letter-spacing: 0.05rem; /* Optional: Add spacing between letters */
+}
+
+/* Input Field Styles */
+.form-control {
+    width: 100%; /* Full width of the container */
+    padding: 0.75rem; /* Consistent padding for inputs */
+    font-size: 1.5rem; /* Slightly larger input text */
+    border: 1px solid var(--border-color); /* Border matches other elements */
+    border-radius: 5px; /* Slight rounding for a unified look */
+    background-color: #fff; /* White background for inputs */
+    color: #333; /* Text color inside inputs */
+    transition: border-color 0.3s, box-shadow 0.3s; /* Smooth hover and focus effect */
+}
+
+/* Input Field Focus Effect */
+.form-control:focus {
+    border-color: var(--primary-color); /* Highlight border on focus */
+    font-size: 1.5rem; /* Slightly larger input text */
+    box-shadow: 0 0 5px rgba(78, 52, 46, 0.5); /* Slight shadow in primary color */
+    outline: none; /* Remove default outline */
+}
+
+/* Adjust the Form Container */
+form {
+    max-width: 600px; /* Center form in smaller screens */
+    margin: auto; /* Center alignment */
+    padding: 2rem; /* Add padding around the form */
+    background-color: var(--primary-color-light); /* Light background for the form */
+    border-radius: 15px; /* Rounded corners */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Deeper shadow for elevation */
+}
+

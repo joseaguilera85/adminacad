@@ -5,7 +5,7 @@ from django.shortcuts import render
 @login_required
 def menu(request):
     is_ventas_group = request.user.groups.filter(name='Ventas').exists()
-    is_clientes_group = request.user.groups.filter(name='Clientes').exists()
+    is_clientes_group = request.user.groups.filter(name='Cliente').exists()
     is_administracion_group = request.user.groups.filter(name='Administracion').exists()
     
     # Add these variables to the context
@@ -38,6 +38,37 @@ def register_user(request):
     return render(request, "menu/register_user.html", {"form": form})
 
 #---------------------------
+
+from django.shortcuts import render, redirect
+from django.contrib.auth.models import User
+from django import forms
+from django.db import IntegrityError
+from .forms import ClienteRegistrationForm
+from clientes.models import Cliente
+
+def register_clientes(request):
+    # Filter clients without users
+    available_clients = Cliente.objects.exclude(mail__in=User.objects.values_list('username', flat=True))
+
+    # If no clients are available, render a message
+    if not available_clients.exists():
+        return render(request, "menu/register_clientes.html", {"message": "No clients available for registration."})
+
+    if request.method == "POST":
+        form = ClienteRegistrationForm(request.POST)
+        if form.is_valid():
+            try:
+                form.save()
+                return redirect("menu:menu")  # Redirect to a success page
+            except IntegrityError:
+                form.add_error(None, "A user with the selected client's email already exists.")  # Friendly error message
+    else:
+        form = ClienteRegistrationForm()
+
+    return render(request, "menu/register_clientes.html", {"form": form})
+
+#---------------------------
+
 
 from django.contrib.auth.views import PasswordChangeView
 from django.urls import reverse_lazy

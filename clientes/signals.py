@@ -25,4 +25,4 @@ def send_meeting_reminder(sender, instance, created, **kwargs):
 @receiver(post_delete, sender=Interaction)
 def update_client_interaction_status(sender, instance, **kwargs):
     # Update the status of the associated client
-    instance.cliente.update_interaction_status()
+    instance.oportunidad.update_interaction_status()

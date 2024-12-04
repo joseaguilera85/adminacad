@@ -1,15 +1,30 @@
-# clientes/views.py
-
-from django.contrib.auth import login, logout
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required, permission_required
-from django.core.exceptions import PermissionDenied
-from django.db.models import Q
-from django.contrib import messages
-from django.utils import timezone
 from datetime import datetime, timedelta
-from .forms import ClienteForm, InteractionForm, SignUpForm, MeetingForm
-from .models import Cliente, Interaction, Meeting
+
+from django.conf import settings
+from django.contrib import messages
+from django.contrib.auth import login, logout
+from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.models import Group
+from django.core.exceptions import PermissionDenied
+from django.core.mail import send_mail
+from django.core.paginator import Paginator
+from django.db.models import Q
+from django.http import JsonResponse
+from django.shortcuts import render, redirect, get_object_or_404
+from django.utils import timezone
+from django.utils.timezone import make_aware
+
+from .forms import (
+    ClienteForm,
+    EventForm,
+    InteractionForm,
+    MeetingForm,
+    OportunidadForm,
+    SignUpForm,
+)
+from .models import Cliente, Event, Interaction, Meeting, Oportunidad
+
+
 
 ### 2.0 Login ###
 # Logout the user and redirect to the login page
@@ -22,14 +37,16 @@ def logout_view(request):
 # Home page view for authenticated users
 @login_required
 def client_home(request):
-    return render(request, 'clientes/home.html')
+    return render(request, 'clientes/clientes_home.html')
 
 #------------------------------------------
 def custom_403(request, exception=None): 
     return render(request, 'clientes/403.html', status=403)
 #------------------------------------------
 
+#------------------------
 ### 2.1 Clientes ###
+#------------------------
 
 # Create a new client
 @login_required
@@ -47,17 +64,10 @@ def new_client(request):
         print("Form is not valid")
     return render(request, 'clientes/new_client.html', {'form': form})
 
-
 #---------------------------------------------
-
-from django.core.paginator import Paginator
-
 # Consult and filter clients based on search criteria
 @login_required
 def consult_clients(request):
-
-    # Base query to filter out inactive clients
-    #clients = Cliente.objects.exclude(estatus='inactivo')
 
     search_query = request.GET.get('search', '')
     clients = Cliente.objects.filter(
@@ -73,7 +83,6 @@ def consult_clients(request):
     page_obj = paginator.get_page(page_number)
 
     return render(request, 'clientes/client_list.html', {'page_obj': page_obj})
-
 
 #---------------------------------------------
 
@@ -93,8 +102,9 @@ def delete_client(request, client_id):
 @login_required
 def client_detail(request, id_cliente):
     client = get_object_or_404(Cliente, id_cliente=id_cliente)
+    oportunidades = client.oportunidades.all()
     interactions = client.interactions.all()
-    return render(request, 'clientes/client_detail.html', {'client': client, 'interactions': interactions})
+    return render(request, 'clientes/client_detail.html', {'client': client, 'oportunidades': oportunidades})
 
 #---------------------------------------------
 
@@ -112,9 +122,45 @@ def edit_client(request, id_cliente):
         form = ClienteForm(instance=client)
     return render(request, 'clientes/edit_client.html', {'form': form, 'client': client})
 
-#---------------------------------------------
+#------------------------
+### 2.2 Oportunidades ###
+#------------------------
 
+@login_required
+def load_oportunidades(request):
+    cliente_id = request.GET.get('cliente_id')
+    oportunidades = Oportunidad.objects.filter(cliente_id=cliente_id).order_by('project')
+    return JsonResponse(list(oportunidades.values('id_oportunidad', 'project')), safe=False)
+
+@login_required
+def lista_oportunidades(request):
+    oportunidades = Oportunidad.objects.all()
+    print (oportunidades)
+    return render(request, 'clientes/oportunidades_list.html', {'oportunidades': oportunidades})
+
+
+@login_required
+def create_oportunidad(request, id_cliente):
+    client = get_object_or_404(Cliente, id_cliente=id_cliente)
+    
+    if request.method == 'POST':
+        form = OportunidadForm(request.POST)
+        if form.is_valid():
+            oportunidad = form.save(commit=False)
+            oportunidad.cliente = client
+            oportunidad.created_by = request.user
+            oportunidad.created_at = timezone.now()
+            oportunidad.save()
+            messages.success(request, 'Oportunidad creada exitosamente!')
+            return redirect('clientes:client_detail', id_cliente=id_cliente)
+    else:
+        form = OportunidadForm()
+
+    return render(request, 'clientes/create_oportunidad.html', {'form': form, 'client': client})
+
+#------------------------
 ### 2.2 Interacciones ###
+#------------------------
 
 # Add an interaction for a specific client
 @login_required
@@ -129,19 +175,30 @@ def add_interaction(request, id_cliente):
             messages.success(request, 'Interaction added successfully!')
             return redirect('clientes:client_detail', id_cliente=id_cliente)
     else:
-        form = InteractionForm()
+        form = InteractionForm(initial={'cliente': client})
+        form.fields['oportunidad'].queryset = client.oportunidades.all()
+
+        
     return render(request, 'clientes/add_interaction.html', {'form': form, 'client': client})
 
 #---------------------------------------------
+
+@login_required
+def review_interacciones(request, id_oportunidad):
+    oportunidad = get_object_or_404(Oportunidad, id_oportunidad=id_oportunidad)
+    interactions = oportunidad.interactions.all()
+    return render(request, 'clientes/interacciones_list.html', {'oportunidad': oportunidad, 'interactions': interactions})
+
+#---------------------------------------------
 ### 2.3 Citas ###
+#---------------------------------------------
 
-# Schedule a new meeting
-from datetime import timedelta
-from django.utils.timezone import make_aware
-
+@login_required
 def schedule_meeting(request):
+    cliente_id = request.GET.get('client')
+
     if request.method == 'POST':
-        form = MeetingForm(request.POST)
+        form = MeetingForm(request.POST, cliente_id=cliente_id)
         if form.is_valid():
             meeting = form.save(commit=False)
             meeting_date_time = make_aware(meeting.date_time)
@@ -153,15 +210,24 @@ def schedule_meeting(request):
             )
             if conflicting_meetings.exists():
                 messages.error(request, 'This salesperson is already booked at the selected time. Please choose another time.')
-                return render(request, 'clientes/schedule_meeting.html', {'form': form})
+                last_message = list(messages.get_messages(request))[-1:]
+                return render(request, 'clientes/schedule_meeting.html', {'form': form, 'last_message': last_message})
             
             # Save the meeting
             meeting.save()
             
+            # Find the related Oportunidad
+            oportunidad = Oportunidad.objects.filter(cliente=meeting.client).first()
+            if not oportunidad:
+                messages.error(request, 'No opportunity found for this client.')
+                last_message = list(messages.get_messages(request))[-1:]
+                return render(request, 'clientes/schedule_meeting.html', {'form': form, 'last_message': last_message})
+
             # Automatically create an interaction for the meeting
             try:
                 Interaction.objects.create(
                     cliente=meeting.client,
+                    oportunidad=oportunidad,
                     salesperson=meeting.salesperson,
                     interaction_type='Meeting',
                     category='Follow-up',
@@ -169,15 +235,20 @@ def schedule_meeting(request):
                 )
             except Exception as e:
                 messages.error(request, f"An error occurred while creating the interaction: {str(e)}")
-                return render(request, 'clientes/schedule_meeting.html', {'form': form})
+                last_message = list(messages.get_messages(request))[-1:]
+                return render(request, 'clientes/schedule_meeting.html', {'form': form, 'last_message': last_message})
 
             messages.success(request, 'Meeting scheduled successfully!')
             return redirect('clientes:clientes_home')
+        else:
+            # Debug form errors for troubleshooting
+            print(form.errors)
+
     else:
-        form = MeetingForm()
+        # Initialize the form for GET requests
+        form = MeetingForm(cliente_id=cliente_id)
 
     return render(request, 'clientes/schedule_meeting.html', {'form': form})
-
 
 #---------------------------------------------
 
@@ -223,25 +294,16 @@ def delete_meeting(request, meeting_id):
         return redirect('clientes:meeting_list')
     return render(request, 'clientes/delete_meeting.html', {'meeting': meeting})
 
+
+
 #---------------------------------------------
-
-def custom_403(request, exception=None): 
-    return render(request, 'clientes/403.html', status=403)
-
-
-#==================
-
-from django.shortcuts import render
-from django.db.models import Count, F, Q  # Add F and Q imports
-from .models import Cliente
+### 2.4 Dahboard ###
+#---------------------------------------------
 
 from django.shortcuts import render
 from django.db.models import Count, F, Q
 from django.db.models.functions import TruncMonth  # To group by month
 from .models import Cliente
-
-from django.db.models import Count, Q, F
-from django.db.models.functions import TruncMonth
 
 def dashboard_view(request):
     # Get the total number of leads per month (aggregated by month only)
@@ -285,16 +347,9 @@ def dashboard_view(request):
 
     return render(request, 'clientes/dashboard.html', context)
 
-#==================
-
-
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import Group
-from .models import Event, Cliente
-from .forms import EventForm
-from django.core.mail import send_mail
-from django.conf import settings
+#---------------------------------------------
+### 2.5 Eventos ###
+#---------------------------------------------
 
 @login_required
 def create_event(request):
@@ -335,11 +390,10 @@ def create_event(request):
 
 #------------------
 
-from django.shortcuts import render
-from .models import Event
-
 def event_list(request):
     # Fetch events created by the logged-in user
     events = Event.objects.filter(creator=request.user).order_by('-date')
 
     return render(request, 'clientes/event_list.html', {'events': events})
+
+

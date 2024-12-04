@@ -4,18 +4,14 @@
 {% block content %}
 <div class="container mt-5">
     <div class="d-flex justify-content-between align-items-center">
-        <h1>Client Details for {{ client.nombre }}{% if client.project %}: {{ client.project.name }}{% endif %}</h1>
-        <a href="{% url 'clientes:clientes_home' %}" class="btn btn-secondary">Return to Home</a>
+        <h1>Client Details for {{ client.nombre }}</h1>
+        <a href="{% url 'clientes:consult_clients' %}" class="btn btn-secondary">Lista de clientes</a>
     </div>
 
     <div class="mt-4">
         <a href="{% url 'clientes:edit_client' client.id_cliente %}" class="btn custom-brown-btn btn-sm">Edit Client</a>
-        
-        <form method="POST" action="{% url 'clientes:delete_client' client.id_cliente %}" style="display:inline;">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-danger btn-sm">Delete Client</button>
-        </form>
-        <a href="{% url 'clientes:add_interaction' client.id_cliente %}" class="btn btn-success btn-sm">Add Interaction</a>
+        <a href="{% url 'clientes:create_oportunidad' client.id_cliente %}" class="btn btn-success btn-sm">Nueva Oportunidad</a>
+        <a href="{% url 'clientes:add_interaction' client.id_cliente %}" class="btn btn-success btn-sm">Registrar Interacción</a>
         <hr class="custom-hr my-2">
     </div>
 
@@ -24,29 +20,28 @@
             <h3 class="mt-4">Información de clientes</h3>
         </div>
         <div class="card-body">
-            <p><strong>Project:</strong> {% if client.project %}{{ client.project.name }}</p>
-            <p><strong>ID Cliente: </strong>{{ client.id_cliente }}</p>
             <p><strong>Fecha creación: </strong>{{ client.created_at }}</p>
             <p><strong>Email:</strong> {{ client.mail }}</p>
             <p><strong>Phone:</strong> {{ client.celular }}</p>
             <p><strong>Age:</strong> {{ client.edad }}</p>
-            <p><strong>Status:</strong> {{ client.estatus }}</p>
-            <p><strong>Property Type:</strong> {{ client.tipo_propiedad }}</p>
-            {% endif %}</p>
         </div>
     </div>
+
     <hr style="border: 0; height: 3px; background-color: black;">
-    <h3 class="mt-4">Interactions</h3>
+
+    <h3 class="mt-4">Oportunidades</h3>
     <ul class="list-group">
-        {% for interaction in interactions %}
+        {% for opp in oportunidades %}
             <li class="list-group-item">
-                <strong>{{ interaction.date|date:"Y-m-d" }}</strong><br> 
-                <strong>{{ interaction.interaction_type }}:</strong> 
-                {{ interaction.category }}
-                <p class="mt-2">{{ interaction.notes }}</p>
+                <strong>{{ opp.created_at|date:"Y-m-d" }}</strong><br>
+                <strong>Project:</strong> {{ opp.project }}<br>
+                <strong>Status:</strong> {{ opp.estatus }}<br>
+                <strong>Last Interaction:</strong> {{ opp.last_interaction }}<br>
+                <br><a href="{% url 'clientes:review_interacciones' opp.id_oportunidad %}" class="btn custom-brown-btn btn-sm">Review Interacciones</a>
+                <hr style="border: 0; height: 1px; background-color: black;">
             </li>
         {% empty %}
-            <li class="list-group-item text-muted">No interactions yet.</li>
+            <li class="list-group-item text-muted">No opportunities yet.</li>
         {% endfor %}
     </ul>
 </div>
