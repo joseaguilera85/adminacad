@@ -12,7 +12,7 @@ from datetime import datetime
 class ClienteForm(forms.ModelForm):
     class Meta:
         model = Cliente
-        fields = ['nombre', 'apellido', 'edad', 'celular', 'mail']
+        fields = ['nombre', 'apellido', 'celular', 'mail', 'edad']
 
 #----------------------------------------
 
@@ -27,6 +27,14 @@ class OportunidadForm(forms.ModelForm):
                 ('cerrado', 'Cerrado')
             ])}
 
+
+#----------------------------------------
+
+class CreateOportunidadForm(forms.ModelForm):
+    class Meta:
+        model = Oportunidad
+        fields = ['project']
+        
 #----------------------------------------
 class InteractionForm(forms.ModelForm):
     class Meta:

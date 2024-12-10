@@ -140,13 +140,11 @@ LOGOUT_REDIRECT_URL = '/menu/'
 
 
 # Email configuration for Gmail
-import certifi
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_SSL_CERTFILE = certifi.where() 
 DEFAULT_FROM_EMAIL = "My App <jose.aguilera.lazo@gmail.com>"
 EMAIL_HOST_USER = 'jose.aguilera.lazo@gmail.com'
 EMAIL_HOST_PASSWORD = 'gsvv enwe ehke qrgk'  # Or use an environment variable for better security

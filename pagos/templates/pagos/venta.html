@@ -17,10 +17,10 @@
 
     <h2>Plan de Pagos</h2>
     <!-- Payment Plan Form -->
-    <form method="POST" id="payment-plan-form">
+    <form method="POST" id="venta-plan-form">
         {% csrf_token %}
         
-        {{ payment_plan_form.as_p }}  <!-- Render the payment plan form -->
+        {{ venta_plan_form.as_p }}  <!-- Render the payment plan form -->
         
         <!-- Button to save payment record -->
         <button type="submit" name="action" value="save" class="btn btn-success">Guardar registro de pagos</button>

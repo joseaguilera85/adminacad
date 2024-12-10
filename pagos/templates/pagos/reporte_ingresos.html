@@ -1,0 +1,57 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'clientes/css/styles.css' %}">
+
+
+  <h1>Reporte de Ingresos</h1>
+
+  <h2>Ingresos Mensuales por Proyecto</h2>
+
+  <!-- Formulario de filtro -->
+  <form method="get" class="mb-4">
+    <div class="form-group">
+      <label for="projectName" class="form-label">Filtrar por Proyecto:</label>
+      <select name="project_name" id="projectName" class="form-control">
+        <option value="">-- Todos los Proyectos --</option>
+        {% for project in all_projects %}
+          <option value="{{ project.name }}" 
+                  {% if project.name == project_name_filter %}selected{% endif %}>
+            {{ project.name }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <button type="submit" class="btn btn-secondary">Filtrar</button>
+    <a href="{% url 'pagos:reporte_ingresos' %}" class="btn btn-secondary">Eliminar Filtro</a>
+  </form>
+
+  <div class="table-container">
+    <table class="table table-bordered table-responsive">
+      <thead>
+        <tr>
+          <th>Mes</th>
+          <th>Proyecto</th>
+          <th>Ingresos Reales</th>
+          <th>Ingresos Proyectados</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for ingreso in ingresos_mensuales %}
+          <tr>
+            <td>{{ ingreso.mes|date:"F Y" }}</td>
+            <td>{{ ingreso.payment_record__project__name }}</td>
+            <td>${{ ingreso.total_ingresos_reales|floatformat:0 }}</td>
+            <td>${{ ingreso.total_ingresos_proyectados|floatformat:0 }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Botón para exportar -->
+  <a href="?export=true" class="btn btn-primary">Exportar a Excel</a>
+{% endblock %}

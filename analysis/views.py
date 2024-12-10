@@ -25,6 +25,20 @@ from .desarrollo_inmobiliario_funciones import (
 def home_view(request):
     return render(request, 'analysis/analysis_home.html')
 
+
+#-------------------------------
+
+def project_list(request):
+    project_costs = ProjectCost.objects.all()
+    return render(request, 'analysis/project_list.html', {'project_costs': project_costs})
+
+
+#-------------------------------
+
+def project_detail(request, project_cost_id):
+    project_cost = ProjectCost.objects.get(id=project_cost_id)
+    return render(request, 'analysis/project_detail.html', {'project_cost': project_cost})
+
 #-------------------------------
 
 def project_cost_list(request):
@@ -74,7 +88,7 @@ def edit_project_cost(request, project_cost_id):
             # Save the updated project cost object
             form.save()
             # Redirect to the project costs list page
-            return redirect('analysis:project_cost_list')
+            return redirect('analysis:project_detail', project_cost.id)
     else:
         # Create a form instance for the current project cost object
         form = ProjectCostForm(instance=project_cost)
@@ -91,7 +105,7 @@ def edit_project_terreno(request, project_cost_id):
         form = ProjectTerrenoForm(request.POST, instance=project_cost)
         if form.is_valid():
             form.save()
-            return redirect('analysis:project_cost_list')  # redirect to the relevant page
+            return redirect('analysis:project_detail', project_cost.id)
     else:
         form = ProjectTerrenoForm(instance=project_cost)
     
@@ -105,7 +119,7 @@ def edit_project_fechas(request, project_cost_id):
         form = ProjectFechasForm(request.POST, instance=project_cost)
         if form.is_valid():
             form.save()
-            return redirect('analysis:project_cost_list')  # redirect to the relevant page
+            return redirect('analysis:project_detail', project_cost.id)
     else:
         form = ProjectFechasForm(instance=project_cost)
     
@@ -114,12 +128,13 @@ def edit_project_fechas(request, project_cost_id):
 def edit_project_ventas(request, project_cost_id):
     # Fetch the specific cost instance
     project_cost = get_object_or_404(ProjectCost, id=project_cost_id)
+    print (project_cost)
     
     if request.method == 'POST':
         form = ProjectVentasForm(request.POST, instance=project_cost)
         if form.is_valid():
             form.save()
-            return redirect('analysis:project_cost_list')  # redirect to the relevant page
+            return redirect('analysis:project_detail', project_cost.id)  
     else:
         form = ProjectVentasForm(instance=project_cost)
     

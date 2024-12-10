@@ -1,0 +1,26 @@
+<!-- project_list.html -->
+{% extends "analysis/analysis_home.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block right_content %}
+<link rel="stylesheet" href="{% static 'analysis/css/analysis.css' %}">
+
+<!-- Table for projects, each column represents a project -->
+<div class="container">
+    {% for project_cost in project_costs %}
+        <div class="card mb-3"> <!-- Added mb-3 for spacing between cards -->
+            <div class="card-body">
+                <!-- Wrap the buttons with a container that applies the vertical spacing -->
+                <div class="vertical-buttons">
+                    <a href="{% url 'analysis:project_detail' project_cost.id %}" class="btn custom-brown-btn">
+                        {{ project_cost.project }} <!-- Display project name inside the button -->
+                    </a>
+                    <br>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

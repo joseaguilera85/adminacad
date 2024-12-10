@@ -32,6 +32,8 @@ class ProjectCost(models.Model):
     comision_contraventa = models.FloatField(default=1.0)  # Default 1%
     comision_contraescritura = models.FloatField(default=1.0)  # Default 1%
 
+
+#------------------
     # Project Dates
     fecha_inicio_proyecto = models.DateField(default=datetime.today)
     mes_inicio_proyecto = models.IntegerField(default=1)
@@ -45,6 +47,7 @@ class ProjectCost(models.Model):
         return datetime.today() + relativedelta(months=18)
 
     fecha_inicio_preventa = models.DateField(default=default_fecha_inicio_preventa)
+
 
     # Construcción Dates
     fecha_inicio_construccion = models.DateField(default=datetime.today)

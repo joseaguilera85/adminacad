@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apartment Status Report</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Apartment Status Report</h2>
+
+        <!-- Form to filter by Project and Status -->
+        <form method="GET" action="{% url 'clientes:apartment_status_report' %}">
+            <!-- Dropdown to select Project -->
+            <div class="form-group">
+                <label for="project">Select Project</label>
+                <select name="project" id="project" class="form-control">
+                    <option value="">Select a project</option>
+                    {% for project in projects %}
+                        <option value="{{ project.id }}" {% if project.id == selected_project_id %}selected{% endif %}>{{ project.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Radio buttons to select Status -->
+            <div class="form-group">
+                <label>Status</label><br>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="status" id="disponible" value="disponible" {% if status == 'disponible' %}checked{% endif %}>
+                    <label class="form-check-label" for="disponible">Disponible</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="status" id="apartado" value="apartado" {% if status == 'apartado' %}checked{% endif %}>
+                    <label class="form-check-label" for="apartado">Apartado</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="status" id="vendido" value="vendido" {% if status == 'vendido' %}checked{% endif %}>
+                    <label class="form-check-label" for="vendido">Vendido</label>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-primary">Filter</button>
+        </form>
+
+        <hr>
+
+        <!-- Table to display apartments based on the selected filters -->
+        <table class="table table-bordered table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Project</th>
+                    <th>Apartment Number</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for apartment in apartments %}
+                <tr>
+                    <td>{{ apartment.project.name }}</td>
+                    <td>{{ apartment.number }}</td>
+                    <td>{{ apartment.status }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4">No apartments found for the selected filters.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

@@ -7,10 +7,10 @@ from .views import schedule_meeting, meeting_list, edit_meeting, delete_meeting,
 app_name = 'clientes'  # This defines the namespace for this app
 
 urlpatterns = [
+    path('', views.client_home, name='clientes_home'),
     path('home/', views.client_home, name='clientes_home'),
 
     ### 2.O Login ###
-    path('', auth_views.LoginView.as_view(template_name='clientes/login.html'), name='login'),  # Use LoginView
     path('login/', auth_views.LoginView.as_view(template_name='clientes/login.html'), name='login'),
     path('logout/', views.logout_view, name='logout'),  # Use custom logout view
 
@@ -21,12 +21,14 @@ urlpatterns = [
     path('delete/<uuid:client_id>/', views.delete_client, name='delete_client'),  # Delete client URL
     path('cliente/<uuid:id_cliente>/', views.client_detail, name='client_detail'),
     
-    ### 2.2 Oportunidades e Interacciones ###
-    path('oportunidades/', views.lista_oportunidades, name='lista_oportunidades'),
+    ### 2.2 Oportunidades ###
+    path('review-oportunidades/', views.review_oportunidades, name='review_oportunidades'),
+    path('edit-opotunidad/<uuid:id_oportunidad>/', views.edit_oportunidad, name='edit_oportunidad'),
     path('crear_oportunidad/<uuid:id_cliente>/', views.create_oportunidad, name='create_oportunidad'),
-    path('cliente/<uuid:id_cliente>/add_interaction/', views.add_interaction, name='add_interaction'),
+
+    ### 2.2 Interacciones ###
     path('review_interacciones/<uuid:id_oportunidad>/', views.review_interacciones, name='review_interacciones'),
-    path('ajax/load-oportunidades/', views.load_oportunidades, name='ajax_load_oportunidades'), 
+    path('cliente/<uuid:id_cliente>/add_interaction/', views.add_interaction, name='add_interaction'),
     
     ### 2.3 Citas ###
     path('meetings/', meeting_list, name='meeting_list'),  # New URL for meeting list
@@ -35,12 +37,16 @@ urlpatterns = [
     path('meetings/delete/<int:meeting_id>/', delete_meeting, name='delete_meeting'),  # New URL for deleting meetings
 
     ### 2.4 Dashboard
-    path('dashboard/', dashboard_view, name='dashboard'),
+    path('dashboard/', views.dashboard_view, name='dashboard'),
+    path('tabular_leads/', views.tabular_leads, name='tabular_leads'),
+    path('apartment-status-report/', views.apartment_status_report, name='apartment_status_report'),
 
     ### 2.5 Eventos
-    path('events/create/', views.create_event, name='create_event'), 
     path('events/', views.event_list, name='event_list'),
-
+    path('events/create/', views.create_event, name='create_event'), 
+    path('edit-event/<uuid:id_event>/', views.edit_event, name='edit_event'),
+    path('event/<uuid:id_event>/delete/', views.delete_event, name='delete_event')
+    
 ]
 
 # Global error handler

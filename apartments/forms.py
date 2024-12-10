@@ -17,7 +17,7 @@ class ProjectForm(forms.ModelForm):
 class ApartmentForm(forms.ModelForm):
     class Meta:
         model = Apartment
-        fields = [ 'project','number', 'area', 'tipologia']  # Include 'project' in the fields
+        fields = [ 'project','number', 'area', 'tipologia','points']  # Include 'project' in the fields
         widgets = {
             'project': forms.Select(attrs={'class': 'form-control'}),  # Add a dropdown for project
             'number': forms.TextInput(attrs={'class': 'form-control'}),
@@ -28,5 +28,11 @@ class ApartmentForm(forms.ModelForm):
 
 
 #-------------------------
+class UploadFileForm(forms.Form):
+    file = forms.FileField()
+
+#-------------------------
+
+
 class UploadFileForm(forms.Form):
     file = forms.FileField()

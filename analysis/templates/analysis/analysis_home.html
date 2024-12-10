@@ -1,34 +1,34 @@
-{% extends "base_bootstrap.html" %}
+{% extends "base_dashboard.html" %}
+{% load static %}
 {% load humanize %}
 
 {% block content %}
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        h1 {
-            color: #333;
-        }
-        .button-container {
-            margin-top: 50px;
-        }
-        .button-container form {
-            margin-bottom: 15px; /* Adjust the value as needed */
-        }
-    </style>
+<link rel="stylesheet" href="{% static 'analysis/css/analysis.css' %}">
 
-    <h1>Welcome to the Project Analysis Dashboard</h1>
-
-    <div class="button-container">
-        <form action="{% url 'analysis:project_cost_list' %}" method="get">
-            <button type="submit" class="btn btn-primary btn-lg">Variables del proyecto</button>
-        </form>
-        <form action="{% url 'analysis:select_project_cost' %}" method="get">
-            <button type="submit" class="btn btn-primary btn-lg">Inteligencia</button>
-        </form>
+<div class="container-fluid mt-5">
+    <!-- Flex Container for Left and Right Sections -->
+    <div class="d-flex" style="gap: 15px; align-items: flex-start;">
+    
+        <div class="left-container" style="width: 15%; min-width: 100px; background-color: #f8f9fa; padding: 15px; box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.1); position: sticky; top: 0; height: fit-content;">
+            <!-- Left Container: Buttons -->
+            <div class="card shadow-sm mb-3">
+                <h2 class="text-center mb-5">Análisis de proyectos</h2>
+                <div class="button-container">
+                    <a href="{% url 'analysis:project_list' %}" class="btn custom-brown-btn">Variables del proyecto</a>
+                    <a href="{% url 'analysis:select_project_cost' %}" class="btn custom-brown-btn">Inteligencia</a>
+                </div>
+            </div>
+        </div>
         
+        <div class="right-container" style="width: 85%; padding: 15px;">
+            <!-- Insert the content of the specific page here -->
+            {% block right_content %}
+
+
+            {% endblock %}
+        </div>
     </div>
+</div>
+
+
 {% endblock %}
-
-

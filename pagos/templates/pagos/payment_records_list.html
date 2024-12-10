@@ -6,7 +6,6 @@
 <link rel="stylesheet" href="{% static 'pagos/css/apartment_detail.css' %}">
 
 <h1>Lista de Registros de Pagos</h1>
-<a href="{% url 'pagos:payments_index' %}" class="btn btn-primary">Volver al menú</a>
 <table class="table table-bordered">
     <thead>
         <tr>
@@ -29,7 +28,7 @@
     <tbody>
         {% for record in records %}
             <tr>
-                <td>{{ record.cliente }}</td>
+                <td>{{ record.oportunidad }}</td>
                 <td>{{ record.project.name }}</td>
                 <td>{{ record.apartment.number }}</td>
                 <td>{{ record.porcentaje_descuento }}</td>

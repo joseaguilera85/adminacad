@@ -1,0 +1,55 @@
+{% extends "base_dashboard.html" %}
+
+{% block content %}
+    <style>
+        /* Full-screen flex container */
+        .center-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 50vh;
+        }
+        
+        /* Styling for the form */
+        .login-form {
+            text-align: center;
+            padding: 20px;
+            border: 1px solid #6F4E37; /* Darker brown border */
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: #4E342E; /* Coffee Brown background */
+            color: white; /* White text on brown background */
+        }
+        
+        .login-form h2 {
+            margin-bottom: 20px;
+            color: white; /* Dark brown text color */
+        }
+        
+        .login-form button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #6F4E37; /* Dark brown button */
+            color: white; /* White text on button */
+            border: none; /* Remove border */
+            border-radius: 5px; /* Rounded corners for the button */
+        }
+
+        .login-form button:hover {
+            background-color: #4E342E; /* Lighter brown on hover */
+        }
+    </style>
+    
+    <div class="center-container">
+        <div class="login-form">
+            <h2>Login</h2>
+            <form method="post" action="{% url 'menu:login' %}">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit">Login</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

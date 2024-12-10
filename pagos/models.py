@@ -1,6 +1,7 @@
 from django.db import models
+import uuid
 from apartments.models import Apartment, Project  # Ensure correct import
-from clientes.models import Cliente
+from clientes.models import Cliente, Oportunidad
 
 
 class ListaCliente:
@@ -18,7 +19,20 @@ class ListaCliente:
 
     def get_client_status(self):
         return self.cliente.estatus
- 
+#--------------------------------
+
+
+class Venta(models.Model):
+    id_venta = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="ventas")
+    apartment = models.ForeignKey(Apartment, on_delete=models.CASCADE, related_name="ventas")
+    cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, related_name="ventas")
+    fecha_apartado = models.DateField(null=True, blank=True)
+    fecha_venta = models.DateField(null=True, blank=True)
+
+    def __str__(self):
+        return f"Venta: {self.cliente.nombre} - {self.apartment.number} - {self.project.name}"
+
 #--------------------------------
 
 class PaymentPlan(models.Model):
@@ -36,7 +50,7 @@ class PaymentPlan(models.Model):
 #--------------------------------
 
 class PaymentRecord(models.Model):
-    cliente = models.CharField(max_length=255)
+    oportunidad = models.ForeignKey(Oportunidad, on_delete=models.CASCADE, related_name='payment_records')
     apartment = models.ForeignKey(Apartment, on_delete=models.CASCADE, related_name='payment_records')
     porcentaje_descuento = models.DecimalField(max_digits=5, decimal_places=2)
     porcentaje_enganche = models.DecimalField(max_digits=5, decimal_places=2)
@@ -45,10 +59,6 @@ class PaymentRecord(models.Model):
     mes_inicio = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='payment_records', null=True, blank=True)
-
-    def set_cliente(self, cliente):
-        self.cliente = cliente
-        self.save()
 
 #--------------------------------
 

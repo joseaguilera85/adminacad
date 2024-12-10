@@ -1,13 +1,18 @@
-{% extends "base_dashboard.html" %}
+{% extends "clientes/clientes_home.html" %}
 {% load static %}
 
-{% block content %}
-<h2>Registrar Nueva Oportunidad para {{ client.nombre }} {{ client.apellido }}</h2> 
-  <form method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button class = "btn custom-brown-btn btn-sm" type="submit">Registrar</button>
-  </form>
+{% block right_content %}
+<link rel="stylesheet" href="{% static 'clientes/css/styles.css' %}">
 
-  <link rel="stylesheet" href="{% static 'clientes/css/styles.css' %}"> <!-- Link to your CSS file -->
+    <h2>Nueva Oportunidad para {{ client.nombre }}</h2>
+
+    <form method="post">
+        {% csrf_token %}
+        <!-- Manually render only the desired fields -->
+        <div class="form-group">
+            {{ form.project.label_tag }}
+            {{ form.project }}
+        </div>
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+    </form>
 {% endblock %}

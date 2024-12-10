@@ -1,6 +1,9 @@
-{% extends "base_dashboard.html" %}
+{% extends "clientes/clientes_home.html" %}
+{% load static %}
 
-{% block content %}
+{% block right_content %}
+<link rel="stylesheet" href="{% static 'clientes/css/styles.css' %}">
+
 <div class="container mt-5">
     <h1>Edit Client: {{ client.nombre }}</h1>
     <a href="{% url 'clientes:client_detail' client.id_cliente %}" class="btn btn-secondary mb-3">Back to Details</a>

@@ -18,5 +18,8 @@ urlpatterns = [
     path('add_apartment/', views.apartment_add, name='add_apartment'),
     path('edit/<int:pk>/', views.apartment_edit, name='apartment_edit'),
     path('delete/<int:pk>/', views.apartment_delete, name='apartment_delete'), 
-    path('upload/', views.apartment_upload, name='apartment_upload'),
+    
+    
+    path('upload-apartments/', views.apartment_upload, name='apartment_upload'),
+    path('upload-pricelist/', views.price_list_upload, name='price_list_upload'),
 ]

@@ -4,6 +4,7 @@
 {% block right_content %}
 <h2>My Events</h2>
 <a href="{% url 'clientes:clientes_home' %}" class="btn custom-brown-btn btn-sm">Return to Home</a>
+<a href="{% url 'clientes:create_event' %}" class="btn custom-brown-btn btn-sm">Create New Event</a>
 
 {% if events %}
     <table class="table">
@@ -14,6 +15,7 @@
                 <th>Date</th>
                 <th>Location</th>
                 <th>Invited Clients</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -30,16 +32,16 @@
                             {% endfor %}
                         </ul>
                     </td>
+                    <td>
+                        <a href="{% url 'clientes:edit_event' id_event=event.id_event %}" class="btn btn-primary btn-sm">Edit</a>
+                        <a href="{% url 'clientes:delete_event' id_event=event.id_event %}" class="btn btn-primary btn-sm">Borrar</a>
+                    </td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
 {% else %}
-    <p>No events found. <a href="{% url 'clientes_create_event' %}">Create your first event</a>.</p>
+    <p>No events found. <a href="{% url 'clientes:create_event' %}">Create your first event</a>.</p>
 {% endif %}
-<div>
-<br>
-<a href="{% url 'clientes:create_event' %}" class="btn btn-primary">Create New Event</a>
-</div>
 <link rel="stylesheet" href="{% static 'clientes/css/styles.css' %}"> <!-- Link to your CSS file -->
 {% endblock %}

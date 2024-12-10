@@ -15,21 +15,6 @@
     <p>Precio Total: ${{ total_price|floatformat:0|intcomma }}</p>
     <hr class="custom-hr">
 
-    <!-- Display success or error messages -->
-    {% if messages %}
-        <div class="alert alert-info" role="alert">
-            {% for message in messages %}
-                <div>{{ message }}</div>
-            {% endfor %}
-        </div>
-    {% endif %}
-
-    {% if message %}
-        <div class="alert alert-success" role="alert">
-            {{ message }}
-        </div>
-    {% endif %}
-
     <!-- Form for payment calculation and submission -->
     <form method="post" id="payment-form">
         {% csrf_token %}
@@ -64,7 +49,7 @@
             <tbody>
                 {% for pago in plan_pagos.pagos %}
                     <tr>
-                        <td>{{ pago.mes }}</td>
+                        <td>{{ pago.fecha }}</td>
                         <td>{{ pago.tipo }}</td>
                         <td>${{ pago.pago|floatformat:2|intcomma }}</td>
                     </tr>

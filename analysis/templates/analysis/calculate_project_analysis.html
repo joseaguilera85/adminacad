@@ -1,8 +1,10 @@
-{% extends "base_bootstrap.html" %}
+{% extends "analysis/analysis_home.html" %}
+{% load static %}
+{% load humanize %}
 
-{% block title %}Select Project Cost{% endblock %}
+{% block right_content %}
+<link rel="stylesheet" href="{% static 'analysis/css/analysis.css' %}">
 
-{% block content %}
     <h1>Select Project Cost</h1>
 
     <form method="post" action="{% url 'analysis:redirect_to_view' %}">

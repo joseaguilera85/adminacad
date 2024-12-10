@@ -1,0 +1,37 @@
+{% extends "pagos/admin_venta_menu.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block right_content %}
+<link rel="stylesheet" href="{% static 'pagos/css/apartment_detail.css' %}">
+
+<div class="container mt-4">
+    <h2>Review Ventas</h2>
+
+    {% if ventas %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Proyecto</th>
+                    <th>Apartamento</th>
+                    <th>Cliente</th>
+                    <th>Fecha Venta</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for venta in ventas %}
+                    <tr>
+                        
+                        <td>{{ venta.project.name }}</td>
+                        <td>{{ venta.apartment.number }}</td>
+                        <td>{{ venta.cliente.nombre }} {{ venta.cliente.apellido }}</td>
+                        <td>{{ venta.fecha_venta|date:"d M Y" }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No ventas found.</p>
+    {% endif %}
+</div>
+{% endblock %}

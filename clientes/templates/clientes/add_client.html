@@ -2,25 +2,19 @@
 {% load static %}
 
 {% block right_content %}
+<link rel="stylesheet" href="{% static 'clientes/css/styles.css' %}"> 
     <div class="container">
         <h2 class="mt-4">Registro de nuevo cliente</h2>
-        <a href="{% url 'clientes:clientes_home' %}" class="btn custom-brown-btn btn-sm">Return to Home</a>
-        <hr class="custom-hr my-2">
     </div>
         <div class="container card shadow-sm mt-4">
                 <form method="POST" class="mt-3">
                     {% csrf_token %}
                     <div class="row">
                         {% for field in form %}
-                            <div class="col-md-4">
                                 <div class="form-group">
                                     {{ field.label_tag }}
                                     {{ field }}
                                 </div>
-                            </div>
-                            {% if forloop.counter|divisibleby:3 %}
-                                </div><div class="row">
-                            {% endif %}
                         {% endfor %}
                     </div>
                     <div class="form-group mt-3">
@@ -29,5 +23,5 @@
                 </form>
             </div>
         </div>
-        <link rel="stylesheet" href="{% static 'clientes/css/styles.css' %}"> <!-- Link to your CSS file -->
+        
 {% endblock %}

@@ -10,6 +10,7 @@ from .models import (
     Project,
     PaymentTransaction,
     AccountStatement,
+    Venta
 )
 from apartments.models import Apartment
 from clientes.models import Cliente
@@ -135,8 +136,117 @@ def inventario_view(request):
 
 
 #------------------------------
-#### 3.2b Vista edificio ####
+#### 3.2b Vista edificio / Plano ####
 # -----------------------------
+
+from django.shortcuts import render
+from .models import Project, Apartment
+
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
+from django.core.serializers import serialize
+
+from django.shortcuts import render, get_object_or_404
+from django.http import JsonResponse
+import json
+
+def plano_lotes(request):
+    # Get all projects for the dropdown
+    projects = Project.objects.all()
+
+    # Get the selected project ID from the GET request
+    selected_project_id = request.GET.get('project')
+
+    # Initialize variables
+    apartments = []
+    houses_json = None
+    project_name = "All Projects"
+
+    if selected_project_id:
+        # Validate and filter apartments for the selected project
+        selected_project = get_object_or_404(Project, id=selected_project_id)
+        project_name = selected_project.name
+        apartments = Apartment.objects.filter(project=selected_project).order_by('number')
+
+    # Create a list of apartments with necessary properties
+    apartments_with_properties = [
+        {
+            "id": apartment.number,
+            "status": apartment.status,
+            "points": apartment.points,  # Ensure points is serializable
+        }
+        for apartment in apartments
+    ]
+
+    # Convert the list to JSON for frontend use
+    houses_json = json.dumps(apartments_with_properties)
+
+    # Render the template with context
+    return render(
+        request,
+        'pagos/house_list.html',
+        {
+            'projects': projects,
+            'apartments': apartments,
+            'project_name': project_name,
+            'houses_json': houses_json,
+        }
+    )
+
+#------------------------------
+
+import json
+from django.shortcuts import render
+from django.http import JsonResponse
+
+def image_map_view(request):
+    # Get all projects for the dropdown
+    projects = Project.objects.all()
+
+    # Get the selected project ID from the GET request
+    selected_project_id = request.GET.get('project')
+
+    # Initialize variables
+    apartments = []
+    houses_json = None
+    project_name = "All Projects"
+    project_plano = None
+
+    if selected_project_id:
+        # Validate and filter apartments for the selected project
+        selected_project = get_object_or_404(Project, id=selected_project_id)
+        project_name = selected_project.name
+        project_plano = selected_project.plano.url
+        apartments = Apartment.objects.filter(project=selected_project).order_by('number')
+
+    # Create a list of apartments with necessary properties
+    apartments_with_properties = [
+        {
+            "id": apartment.number,
+            "status": apartment.status,
+            "points": apartment.points,  # Ensure points is serializable
+        }
+        for apartment in apartments
+    ]
+
+    # Convert the list to JSON for frontend use
+    houses_json = json.dumps(apartments_with_properties)
+
+    # Render the template with context
+    return render(
+        request,
+        'pagos/house_list2.html',
+        {
+            'project_plano': project_plano,
+            'projects': projects,
+            'apartments': apartments,
+            'project_name': project_name,
+            'houses_json': houses_json,
+        }
+    )
+
+
+#------------------------------
 
 def plan_edificio_view(request):
     building = []
@@ -150,26 +260,39 @@ def plan_edificio_view(request):
     return render(request, 'pagos/plan_edificio.html', {'building': building})
 
 
-
 #------------------------------
 
-def apartment_detail(request, apartment_number):
-    # Retrieve the apartment by its number
-    apartment = get_object_or_404(Apartment, number=apartment_number)
-    
-    total_price = None
+from django.shortcuts import get_object_or_404, render
+from .models import Project, Apartment, PriceList
 
-    # Fetch the price list and calculate the total price
+def apartment_detail(request, project_name, apartment_number):
+    # Retrieve the project by its name
+    project = get_object_or_404(Project, name=project_name)
+
+    # Retrieve the apartment by its number and project
+    apartment = get_object_or_404(Apartment, project=project, number=apartment_number)
+
+    # Calculate the total price of the apartment
     price_list = PriceList.objects.filter(apartment=apartment).first()
+    total_price = None
+    precio_por_m2 = None
+    error_message = None
+
     if price_list:
         total_price = apartment.area * price_list.current_list_price
+        precio_por_m2 = total_price / apartment.area
     else:
         error_message = "No price list available for this apartment."
 
-    precio_por_m2 = total_price / apartment.area
-
-    # Pass the apartment object to the template
-    return render(request, 'pagos/apartment_detail.html', {'apartment': apartment, 'total_price': total_price, 'precio_por_m2': precio_por_m2})
+    # Pass the apartment details and price info to the template
+    context = {
+        'apartment': apartment,
+        'project': project,
+        'total_price': total_price,
+        'precio_por_m2': precio_por_m2,
+        'error_message': error_message,
+    }
+    return render(request, 'pagos/apartment_detail.html', context)
 
 
 #------------------------------
@@ -362,7 +485,10 @@ Resultados del Plan de Pagos:
 """
 
             for pago in pagos:
-                email_message += f"Mes {pago['mes']} - {pago['tipo']} - ${pago['pago']:.2f}\n"
+                fecha = pago.get('fecha', 'Fecha no disponible')
+                tipo = pago.get('tipo', 'Tipo no disponible')
+                pago_amount = pago.get('pago', Decimal(0))  # Default to Decimal(0) if missing
+                email_message += f"Fecha {fecha} - {tipo} - ${pago_amount:.2f}\n"
 
             email_message += f"\nTotal a Pagar: ${total:.2f}\n"
             email_message += "\nAtentamente,\nEl equipo de ventas"
@@ -375,7 +501,7 @@ Resultados del Plan de Pagos:
                 fail_silently=False,
             )
 
-            return render(request, 'pagos/index.html', {
+            return render(request, 'pagos/admin_venta_menu.html', {
                 'message': 'Cotización enviada al cliente exitosamente.'
             })
 
@@ -385,10 +511,6 @@ Resultados del Plan de Pagos:
         'apartment_number': apartment_number,
         'selected_project': selected_project_name,
     })
-
-
-
-
 
 
 #------------------------------------
@@ -457,6 +579,8 @@ def disponible_view(request,apartment_id):
         # Update apartment status to "apartado" (reserved)
         apartment.status = 'disponible'
         apartment.save()  # Save the updated status to the database
+        Venta.objects.filter(apartment=apartment).delete()
+        PaymentRecord.objects.filter(apartment=apartment).delete()
 
         # Redirect to the list of apartments or an appropriate view
         return redirect('pagos:lista_departamentos')  # Make sure this URL name exists in urls.py
@@ -470,6 +594,8 @@ def disponible_view(request,apartment_id):
 
 from django.shortcuts import get_object_or_404, redirect, render
 from .models import PaymentRecord, PaymentInstallment
+from .forms import VentaPlanForm
+from clientes.models import Interaction
 
 def ventas(request, apartment_id):
     # Fetch the apartment and its related project
@@ -480,7 +606,7 @@ def ventas(request, apartment_id):
     total_price = None
 
     # Create an instance of PaymentPlanForm
-    payment_plan_form = PaymentPlanForm(request.POST or None)
+    venta_plan_form = VentaPlanForm(request.POST or None, project=project)
 
     # Fetch the price list and calculate the total price
     price_list = PriceList.objects.filter(apartment=apartment).first()
@@ -490,13 +616,13 @@ def ventas(request, apartment_id):
         error_message = "No price list available for this apartment."
 
     # Handle form submission
-    if request.method == 'POST' and payment_plan_form.is_valid():
-        cliente = payment_plan_form.cleaned_data['cliente']
-        porcentaje_descuento = payment_plan_form.cleaned_data['porcentaje_descuento']
-        porcentaje_enganche = payment_plan_form.cleaned_data['porcentaje_enganche']
-        porcentaje_mensualidades = payment_plan_form.cleaned_data['porcentaje_mensualidades']
-        num_mensualidades = payment_plan_form.cleaned_data['num_mensualidades']
-        mes_inicio = payment_plan_form.cleaned_data['mes_inicio']
+    if request.method == 'POST' and venta_plan_form.is_valid():
+        oportunidad = venta_plan_form.cleaned_data['cliente']
+        porcentaje_descuento = venta_plan_form.cleaned_data['porcentaje_descuento']
+        porcentaje_enganche = venta_plan_form.cleaned_data['porcentaje_enganche']
+        porcentaje_mensualidades = venta_plan_form.cleaned_data['porcentaje_mensualidades']
+        num_mensualidades = venta_plan_form.cleaned_data['num_mensualidades']
+        mes_inicio = venta_plan_form.cleaned_data['mes_inicio']
 
         if total_price:  # Proceed only if total_price is valid
             try:
@@ -513,7 +639,7 @@ def ventas(request, apartment_id):
 
                 # Save the payment record (general details)
                 payment_record = PaymentRecord.objects.create(
-                    cliente=cliente,
+                    oportunidad=oportunidad,
                     apartment=apartment,
                     project=project,
                     porcentaje_descuento=porcentaje_descuento,
@@ -533,10 +659,32 @@ def ventas(request, apartment_id):
                         amount_paid=0.00,  # Update to match the model field name
                         fully_paid=False,  # Update to match the model field name
                     )
+                
+                # Register the sale in the Ventas model
+                cliente = oportunidad.cliente
+                
+                Venta.objects.create(
+                    project=project,
+                    apartment=apartment,
+                    cliente=cliente,
+                    fecha_venta=timezone.now()  # Use the current date as the sale date
+                )
+
+                Interaction.objects.create(
+                    cliente=cliente,
+                    oportunidad=oportunidad,
+                    salesperson=request.user,  # Assuming the salesperson is the current logged-in user
+                    interaction_type='Other',
+                    category='Venta',
+                    notes='Sale registered for the apartment.'  # You can customize the notes if needed
+                )
+
 
                 # Update apartment status
                 apartment.status = "vendido"
                 apartment.save()
+                oportunidad.estatus = "vendido"
+                oportunidad.save()
 
                 return redirect('pagos:list_payment_records')
 
@@ -549,7 +697,7 @@ def ventas(request, apartment_id):
         'project': project,
         'plan_pagos': plan_pagos,
         'error_message': error_message,
-        'payment_plan_form': payment_plan_form,
+        'venta_plan_form': venta_plan_form,
     })
 
 
@@ -730,6 +878,7 @@ def toggle_payment_status(request, installment_id):
     # If not POST, redirect back with no changes
     return redirect('pagos:record_detail', pk=payment.payment_record.id)
 
+# -----------------------------
 
 from django.shortcuts import get_object_or_404, render, redirect
 from datetime import datetime
@@ -781,17 +930,23 @@ def register_payment(request, payment_record_id):
         'payment_record': payment_record,
     })
 
+# -------------------------------
+#### 3.6 Ventas ###
+# -------------------------------
+
+def review_ventas(request):
+    # Fetch all Ventas objects, optionally ordered by fecha_venta
+    ventas = Venta.objects.all().order_by('-fecha_venta')  # Order by most recent sale
+
+    # Render the ventas in the template
+    return render(request, 'pagos/review_ventas.html', {'ventas': ventas})
+
+
+
 
 
 # -------------------------------
 #### Otros ###
-# -------------------------------
-
-def cliente_list_view(request):
-    clientes_queryset = Cliente.objects.all()
-    clientes = [ListaCliente(cliente) for cliente in clientes_queryset]
-    return render(request, 'pagos/lista_clientes.html', {'clientes': clientes})
-
 # -------------------------------
 
 def calculate_npv(payment_schedule, discount_rate):
@@ -826,8 +981,13 @@ def calculate_npv(payment_schedule, discount_rate):
     return npv
 
 
-#--------------
-# views.py
+
+
+
+# -------------------------------
+#### Canva ###
+# -------------------------------
+
 
 from django.shortcuts import render
 from .models import House
@@ -863,43 +1023,6 @@ def plano(request):
     )
 
 
-
-# View to add a new house with an irregular shape
-def add_house(request):
-    if request.method == "POST":
-        form = HouseForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect("pagos:plano")
-    else:
-        form = HouseForm()
-    return render(request, "pagos/add_house.html", {"form": form})
-
-# View to edit an existing house's shape
-def edit_house(request, pk):
-    house = get_object_or_404(House, pk=pk)
-    
-    if request.method == "POST":
-        form = HouseForm(request.POST, instance=house)
-        if form.is_valid():
-            form.save()
-            return redirect("pagos:plano")
-    else:
-        form = HouseForm(instance=house)
-
-    return render(request, "pagos/edit_house.html", {"form": form, "house": house})
-
-
-# View to delete a house
-def delete_house(request, pk):
-    house = get_object_or_404(House, pk=pk)
-    house.delete()
-    return redirect('pagos:plano')  # Redirect back to the house list after deletion
-
-def delete_all_houses(request):
-    # Elimina todos los registros de la tabla House
-    House.objects.all().delete()
-    return redirect('pagos:plano')  # Redirige después de eliminar todas las casas
 
 
 # views.py
@@ -938,3 +1061,78 @@ def upload_excel(request):
 
     form = CSVUploadForm()  # Adjust the form if needed
     return render(request, "pagos/upload_excel.html", {"form": form})
+
+
+#-----------------
+
+# views.py
+
+# views.py
+
+import pandas as pd
+from django.shortcuts import render
+from django.http import HttpResponse
+from .models import PaymentInstallment, Project
+
+def generar_reporte_ingresos(request):
+    # Capturar los valores del filtro desde los parámetros GET
+    project_name_filter = request.GET.get('project_name', '')
+    
+    # Filtrar las cuotas con base en el nombre del proyecto
+    cuotas = PaymentInstallment.objects.all()
+    
+    if project_name_filter:
+        cuotas = cuotas.filter(payment_record__project__name=project_name_filter)
+    
+    # Extraer los datos necesarios
+    data = cuotas.values(
+        'due_date',  # Fecha de vencimiento
+        'total_amount',  # Monto total de la cuota
+        'amount_paid',  # Monto pagado hasta la fecha
+        'payment_record__project__name',  # Nombre del proyecto
+        'payment_record__apartment__number',  # Número del apartamento
+    )
+    
+    # Convertir los datos en un DataFrame para procesar
+    df = pd.DataFrame(data)
+    
+    # Convertir la fecha de vencimiento al primer día del mes correspondiente
+    df['mes'] = pd.to_datetime(df['due_date'], errors='coerce').dt.to_period('M').dt.to_timestamp()
+
+    # Crear una columna de ingresos reales (total pagado)
+    df['ingresos_reales'] = df['amount_paid'].fillna(0)  # Usamos 0 si no hay pago
+
+    # Crear una columna de ingresos proyectados (total por pagar)
+    df['ingresos_proyectados'] = df['total_amount']
+
+    # Agrupar por mes y proyecto
+    ingresos_mensuales = df.groupby(['mes', 'payment_record__project__name']).agg(
+        total_ingresos_reales=('ingresos_reales', 'sum'),
+        total_ingresos_proyectados=('ingresos_proyectados', 'sum')
+    ).reset_index()
+
+    # Convertir los DataFrames a listas de diccionarios para usar en el template
+    ingresos_mensuales_list = ingresos_mensuales.to_dict('records')
+
+    # Obtener todos los proyectos para llenar el dropdown
+    all_projects = Project.objects.all()
+
+    # Si es una solicitud de exportación, devolvemos el archivo Excel
+    if request.GET.get('export') == 'true':
+        with pd.ExcelWriter('reporte_ingresos_completo.xlsx') as writer:
+            ingresos_mensuales.to_excel(writer, sheet_name='Ingresos por Proyecto', index=False)
+
+        with open('reporte_ingresos_completo.xlsx', 'rb') as f:
+            response = HttpResponse(f.read(), content_type='application/vnd.ms-excel')
+            response['Content-Disposition'] = 'attachment; filename="reporte_ingresos_completo.xlsx"'
+            return response
+
+    # Pasamos los datos al template para mostrar en la página web
+    context = {
+        'ingresos_mensuales': ingresos_mensuales_list,
+        'all_projects': all_projects,  # Para el dropdown de proyectos
+        'project_name_filter': project_name_filter,  # Para mantener el filtro seleccionado
+    }
+    return render(request, 'pagos/reporte_ingresos.html', context)
+
+

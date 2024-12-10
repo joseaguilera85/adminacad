@@ -1,46 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project Costs</title>
-    <!-- Add Bootstrap for table styling -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-</head>
-<body>
-    <div class="container">
-        <h1>Project Costs</h1>
-        
-        <!-- Table for projects, each column represents a project -->
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    {% for project_cost in project_costs %}
-                        <th>{{ project_cost.project }}</th> <!-- Assuming each project has a 'name' attribute -->
-                    {% endfor %}
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    {% for project_cost in project_costs %}
-                        <td>
-                            <form action="{% url 'analysis:edit_project_cost' project_cost.id %}" method="get" style="display: inline;">
-                                <button type="submit" class="btn btn-primary btn-sm">Costos</button>
-                            </form>
-                            <form action="{% url 'analysis:edit_project_terreno' project_cost.id %}" method="get" style="display: inline;">
-                                <button type="submit" class="btn btn-primary btn-sm">Terreno</button>
-                            </form>
-                            <form action="{% url 'analysis:edit_project_fechas' project_cost.id %}" method="get" style="display: inline;">
-                                <button type="submit" class="btn btn-primary btn-sm">Fechas</button>
-                            </form>
-                            <form action="{% url 'analysis:edit_project_ventas' project_cost.id %}" method="get" style="display: inline;">
-                                <button type="submit" class="btn btn-primary btn-sm">Ventas</button>
-                            </form>
-                        </td>
-                    {% endfor %}
-                </tr>
-            </tbody>
-        </table>
-    </div>
-</body>
-</html>
+{% extends "analysis/analysis_home.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block right_content %}
+    <link rel="stylesheet" href="{% static 'analysis/css/analysis.css' %}">
+
+<h1>Edit Project: {{ project_cost.project.name }}</h1>
+<h1>Edit Project: {{ project_cost.id }}</h1>
+
+
+<!-- Links for Project Actions -->
+<div class="card-body d-flex">
+    <a href="{% url 'analysis:edit_project_cost' project_cost.id %}" class="btn custom-brown-btn btn-sm">Costos</a>
+    <a href="{% url 'analysis:edit_project_terreno' project_cost.id %}" class="btn custom-brown-btn btn-sm">Terreno</a>
+    <a href="{% url 'analysis:edit_project_fechas' project_cost.id %}" class="btn custom-brown-btn btn-sm">Fechas</a>
+    <a href="{% url 'analysis:edit_project_ventas' project_cost.id %}" class="btn custom-brown-btn btn-sm">Ventas</a>
+</div>
+
+{% endblock %}

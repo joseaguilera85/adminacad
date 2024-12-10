@@ -1,7 +1,9 @@
-{% extends "base_dashboard.html" %}
+{% extends "clientes/clientes_home.html" %}
 {% load static %}
 
-{% block content %}
+{% block right_content %}
+<link rel="stylesheet" href="{% static 'clientes/css/styles.css' %}">
+
     <h2>Add Interaction for {{ client.nombre }}</h2>
 
     <form method="post">
@@ -9,5 +11,4 @@
         {{ form.as_p }}
         <button class="btn custom-brown-btn btn-sm" type="submit">Add Interaction</button>
     </form>
-    <link rel="stylesheet" href="{% static 'clientes/css/styles.css' %}">
 {% endblock %}

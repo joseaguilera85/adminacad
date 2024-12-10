@@ -1,0 +1,22 @@
+<button id="sendMessage">Send WhatsApp Message</button>
+<div id="response"></div>
+
+<script>
+    document.getElementById("sendMessage").addEventListener("click", function () {
+        fetch("/send-message/", {
+            method: "POST",
+            headers: { "X-CSRFToken": "{{ csrf_token }}" },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById("response").innerText = "Message sent: " + data.message;
+            } else {
+                document.getElementById("response").innerText = "Error: " + data.error;
+            }
+        })
+        .catch(error => {
+            document.getElementById("response").innerText = "Request failed.";
+        });
+    });
+</script>

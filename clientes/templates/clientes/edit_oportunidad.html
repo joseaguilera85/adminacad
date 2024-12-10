@@ -1,0 +1,16 @@
+{% extends "clientes/clientes_home.html" %}
+{% load static %}
+
+{% block right_content %}
+<link rel="stylesheet" href="{% static 'clientes/css/styles.css' %}">
+<h3>Cliente: {{ cliente }} - Project: {{ project }}</h3>
+    <form method="post">
+        {% csrf_token %}
+        <!-- Manually render only the desired fields -->
+        <div class="form-group">
+            {{ form.estatus.label_tag }}
+            {{ form.estatus }}
+        </div>
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+    </form>
+{% endblock %}

@@ -1,11 +1,12 @@
-{% extends "base_dashboard.html" %}
+{% extends "clientes/clientes_home.html" %}
 {% load static %}
+{% load humanize %}
 
-{% block content %}
+{% block right_content %}
+<link rel="stylesheet" href="{% static 'clientes/css/styles.css' %}">
 <div class="container mt-5">
     <div class="d-flex justify-content-between align-items-center">
         <h1>Lista de Oportunidades</h1>
-        <a href="{% url 'clientes:clientes_home' %}" class="btn custom-brown-btn btn-sm">Volver al Inicio</a>
     </div>
 
     <div class="card mt-4">
@@ -13,25 +14,27 @@
             <table class="table table-bordered table-hover">
                 <thead>
                     <tr>
+                        <th>Fecha de Creación</th>
                         <th>Cliente</th>
                         <th>Proyecto</th>
-                        <th>Fecha de Creación</th>
                         <th>Estatus</th>
                         <th>Última Interacción</th>
+                        <th>Estado de Interacción</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for opp in oportunidades %}
                         <tr>
-                            <td>{{ opp.cliente.nombre }}</td>
-                            <td>{{ opp.project }}</td>
                             <td>{{ opp.created_at|date:"Y-m-d" }}</td>
+                            <td>{{ opp.cliente.nombre }} {{ opp.cliente.apellido }}</td>
+                            <td>{{ opp.project.name }}</td> <!-- Assuming 'name' is the field in Project model -->
                             <td>{{ opp.estatus|capfirst }}</td>
                             <td>{{ opp.last_interaction|date:"Y-m-d H:i" }}</td>
+                            <td>{{ opp.interaction_status|capfirst }}</td>
                             <td>
                                 <a href="{% url 'clientes:review_interacciones' opp.id_oportunidad %}" class="btn custom-brown-btn btn-sm">Review Interacciones</a>
-                            </td>
+                                <a href="{% url 'clientes:edit_oportunidad' opp.id_oportunidad %}"class="btn custom-brown-btn btn-sm">Edit</a></td>
                         </tr>
                     {% empty %}
                         <tr>

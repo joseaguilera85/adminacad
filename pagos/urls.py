@@ -13,24 +13,22 @@ urlpatterns = [
 
     #### 3.2a Inventario ####
     path('inventario/', views.inventario_view, name='inventario'),
-    path('apartamento/<int:apartment_number>/', views.apartment_detail, name='apartment_detail'),
+    path('apartamento/<str:project_name>/<int:apartment_number>/', views.apartment_detail, name='apartment_detail'),
 
     #### 3.2b Vista edificio ####
-    path('canva/', views.plano, name='plano'),
-    path('canva/add/', views.add_house, name='add_house'),
-    path("canva/edit/<int:pk>/", views.edit_house, name="edit_house"),
-    path('canva/delete/<int:pk>/', views.delete_house, name='delete_house'),  # Add the delete URL
-    path('canva/upload/', views.upload_excel, name='upload_excel'),
-    path('canva/delete_all_houses/', views.delete_all_houses, name='delete_all_houses'),
+    path('canva/', views.plano_lotes, name='plano_lotes'),
+    path('image-map/', views.image_map_view, name='image_map'),
     
-
     #### 3.3 Cotización ###
     path('cotizacion/', views.cotizacion, name='cotizacion'), # COTIZACION
     path('plan-pagos/', views.payment_plan_view, name='plan_pagos'),  # Ruta para 'plan-pagos/'
     
     #### 3.4 Proceso de venta o apartado ###
     path('venta/', views.apartado_venta, name='lista_departamentos'),
+    path('venta/review/', views.review_ventas, name='review_ventas'),
+
     path('venta/<int:apartment_id>/', views.ventas, name='venta'),
+
     path('apartar/<int:apartment_id>/', views.apartar, name='apartar'),
     path('disponible/<int:apartment_id>/', views.disponible_view, name='disponible'),
 
@@ -43,10 +41,8 @@ urlpatterns = [
     path('toggle-payment/<int:installment_id>/', views.toggle_payment_status, name='toggle_payment'),
     path('cancel-payment/<int:installment_id>/', views.cancel_payment, name='cancel_payment'),
 
-    
-    #### Otros ###
-    path('clientes/', views.cliente_list_view, name='lista_clientes'),
-
+    #### 3.7 Reporte de ingresos $$$
+    path('reporte-ingresos/', views.generar_reporte_ingresos, name='reporte_ingresos'),
     
 ]
 

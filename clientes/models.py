@@ -35,6 +35,7 @@ class Oportunidad(models.Model):
         ('prospecto', 'Prospecto'),
         ('en_progreso', 'En Progreso'),
         ('cerrado', 'Cerrado'),
+        ('vendido', 'Vendido'),
     ])
 
     # New fields for interactions
@@ -61,8 +62,7 @@ class Oportunidad(models.Model):
         self.save()
 
     def __str__(self):
-        return f"{self.cliente.nombre}  {self.project}"
-
+        return f"{self.project} - {self.cliente.nombre} {self.cliente.apellido}"
 
 
 # ----------------------------------------
@@ -78,8 +78,9 @@ class Interaction(models.Model):
     CATEGORIES = [
         ('Follow-up', 'Follow-up'),
         ('Proposal Sent', 'Proposal Sent'),
-        ('Contract Signed', 'Contract Signed'),
+        ('Venta', 'Venta'),
         ('Other', 'Other'),
+
     ]
 
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, related_name='interactions')

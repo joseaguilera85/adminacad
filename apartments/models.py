@@ -14,6 +14,7 @@ class Project(models.Model):
     tipo = models.CharField(max_length=20, choices=TIPO_CHOICES, default='disponible')
     description = models.CharField(max_length=700)
     image = models.ImageField(upload_to='media/projects/', null=True, blank=True)  # Add this line for image upload
+    plano = models.ImageField(upload_to='media/apartments/plano/', null=True, blank=True)  # Add this line for image upload
 
     def __str__(self):
         return self.name
@@ -33,6 +34,7 @@ class Apartment(models.Model):
     tipologia = models.CharField(max_length=10, default="A1")
     area = models.DecimalField(max_digits=10, decimal_places=2)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='disponible')
+    points = models.JSONField()  # Store the points of the polygon (e.g., [(x1, y1), (x2, y2), ...])
     image = models.ImageField(upload_to='media/apartments/', null=True, blank=True)  # Add this line for image upload
 
     def __str__(self):

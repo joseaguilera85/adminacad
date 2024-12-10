@@ -20,10 +20,11 @@ from .forms import (
     InteractionForm,
     MeetingForm,
     OportunidadForm,
+    CreateOportunidadForm,
     SignUpForm,
 )
 from .models import Cliente, Event, Interaction, Meeting, Oportunidad
-
+from apartments.models import Apartment, Project
 
 
 ### 2.0 Login ###
@@ -62,10 +63,11 @@ def new_client(request):
         form = ClienteForm()
         # If the form is not valid, print the error messages
         print("Form is not valid")
-    return render(request, 'clientes/new_client.html', {'form': form})
+    return render(request, 'clientes/add_client.html', {'form': form})
 
 #---------------------------------------------
 # Consult and filter clients based on search criteria
+
 @login_required
 def consult_clients(request):
 
@@ -78,7 +80,7 @@ def consult_clients(request):
     ) if search_query else Cliente.objects.all()
 
     # Paginate the clients
-    paginator = Paginator(clients, 20)  # 10 clients per page
+    paginator = Paginator(clients, 10)  # 10 clients per page
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
@@ -127,40 +129,74 @@ def edit_client(request, id_cliente):
 #------------------------
 
 @login_required
-def load_oportunidades(request):
-    cliente_id = request.GET.get('cliente_id')
-    oportunidades = Oportunidad.objects.filter(cliente_id=cliente_id).order_by('project')
-    return JsonResponse(list(oportunidades.values('id_oportunidad', 'project')), safe=False)
+def review_oportunidades(request):
 
-@login_required
-def lista_oportunidades(request):
     oportunidades = Oportunidad.objects.all()
-    print (oportunidades)
     return render(request, 'clientes/oportunidades_list.html', {'oportunidades': oportunidades})
 
+#-----------------
 
 @login_required
 def create_oportunidad(request, id_cliente):
     client = get_object_or_404(Cliente, id_cliente=id_cliente)
     
     if request.method == 'POST':
-        form = OportunidadForm(request.POST)
+        form = CreateOportunidadForm(request.POST)
+        
         if form.is_valid():
             oportunidad = form.save(commit=False)
             oportunidad.cliente = client
+            oportunidad.estatus = 'prospecto'
             oportunidad.created_by = request.user
             oportunidad.created_at = timezone.now()
             oportunidad.save()
             messages.success(request, 'Oportunidad creada exitosamente!')
             return redirect('clientes:client_detail', id_cliente=id_cliente)
     else:
-        form = OportunidadForm()
+        form = CreateOportunidadForm()
 
     return render(request, 'clientes/create_oportunidad.html', {'form': form, 'client': client})
+
+
+#-----------------
+
+def edit_oportunidad(request, id_oportunidad):
+    oportunidad = get_object_or_404(Oportunidad, id_oportunidad=id_oportunidad)
+    cliente = oportunidad.cliente  # Access related Cliente
+    project = oportunidad.project  # Access related Project
+    
+    if request.method == 'POST':
+        form = OportunidadForm(request.POST, instance=oportunidad)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Interaction updated successfully!")
+            return redirect('clientes:review_oportunidades')  # Redirect to the list view
+        else:
+            messages.error(request, "Please correct the errors below.")
+    else:
+        form = OportunidadForm(instance=oportunidad)
+
+        return render(request, 'clientes/edit_oportunidad.html', {
+        'form': form,
+        'oportunidad': oportunidad,
+        'cliente': cliente,
+        'project': project,
+    })
+
+
 
 #------------------------
 ### 2.2 Interacciones ###
 #------------------------
+
+
+@login_required
+def review_interacciones(request, id_oportunidad):
+    oportunidad = get_object_or_404(Oportunidad, id_oportunidad=id_oportunidad)
+    interactions = oportunidad.interactions.all()
+    return render(request, 'clientes/interacciones_list.html', {'oportunidad': oportunidad, 'interactions': interactions})
+
+#---------------------------------------------
 
 # Add an interaction for a specific client
 @login_required
@@ -181,13 +217,6 @@ def add_interaction(request, id_cliente):
         
     return render(request, 'clientes/add_interaction.html', {'form': form, 'client': client})
 
-#---------------------------------------------
-
-@login_required
-def review_interacciones(request, id_oportunidad):
-    oportunidad = get_object_or_404(Oportunidad, id_oportunidad=id_oportunidad)
-    interactions = oportunidad.interactions.all()
-    return render(request, 'clientes/interacciones_list.html', {'oportunidad': oportunidad, 'interactions': interactions})
 
 #---------------------------------------------
 ### 2.3 Citas ###
@@ -211,7 +240,7 @@ def schedule_meeting(request):
             if conflicting_meetings.exists():
                 messages.error(request, 'This salesperson is already booked at the selected time. Please choose another time.')
                 last_message = list(messages.get_messages(request))[-1:]
-                return render(request, 'clientes/schedule_meeting.html', {'form': form, 'last_message': last_message})
+                return render(request, 'clientes/add_meeting.html', {'form': form, 'last_message': last_message})
             
             # Save the meeting
             meeting.save()
@@ -221,7 +250,7 @@ def schedule_meeting(request):
             if not oportunidad:
                 messages.error(request, 'No opportunity found for this client.')
                 last_message = list(messages.get_messages(request))[-1:]
-                return render(request, 'clientes/schedule_meeting.html', {'form': form, 'last_message': last_message})
+                return render(request, 'clientes/add_meeting.html', {'form': form, 'last_message': last_message})
 
             # Automatically create an interaction for the meeting
             try:
@@ -236,7 +265,7 @@ def schedule_meeting(request):
             except Exception as e:
                 messages.error(request, f"An error occurred while creating the interaction: {str(e)}")
                 last_message = list(messages.get_messages(request))[-1:]
-                return render(request, 'clientes/schedule_meeting.html', {'form': form, 'last_message': last_message})
+                return render(request, 'clientes/add_meeting.html', {'form': form, 'last_message': last_message})
 
             messages.success(request, 'Meeting scheduled successfully!')
             return redirect('clientes:clientes_home')
@@ -248,7 +277,7 @@ def schedule_meeting(request):
         # Initialize the form for GET requests
         form = MeetingForm(cliente_id=cliente_id)
 
-    return render(request, 'clientes/schedule_meeting.html', {'form': form})
+    return render(request, 'clientes/add_meeting.html', {'form': form})
 
 #---------------------------------------------
 
@@ -297,58 +326,87 @@ def delete_meeting(request, meeting_id):
 
 
 #---------------------------------------------
-### 2.4 Dahboard ###
+### 2.4 Dashboard ###
+#---------------------------------------------
+
+def dashboard_view(request):
+    return render(request, 'clientes/dashboard.html')
+
+#---------------------------------------------
+
+def oportunidad_list(request):
+    # Get all opportunities
+    oportunidades = Oportunidad.objects.all()
+
+    # Render the template with the 'oportunidades' context
+    return render(request, 'clientes/oportunidades_list.html', {'oportunidades': oportunidades})
+
+
 #---------------------------------------------
 
 from django.shortcuts import render
-from django.db.models import Count, F, Q
-from django.db.models.functions import TruncMonth  # To group by month
+from django.db.models import Count, Q
 from .models import Cliente
 
-def dashboard_view(request):
-    # Get the total number of leads per month (aggregated by month only)
-    new_leads_per_month = Cliente.objects.filter(estatus='lead') \
-        .annotate(month=TruncMonth('created_at')) \
-        .values('month') \
-        .annotate(total_leads=Count('id_cliente')) \
-        .order_by('month')
+def tabular_leads(request):
+    # Fetch data from the Oportunidad model
+    project_data = Oportunidad.objects.values('project__name') \
+        .annotate(total_leads=Count('id_oportunidad', filter=Q(estatus='prospecto'))) \
+        .annotate(total_clients=Count('id_oportunidad', filter=Q(estatus='cerrado'))) \
+        .annotate(conversion_rate=100.0 * Count('id_oportunidad', filter=Q(estatus='cerrado')) / Count('id_oportunidad', filter=Q(estatus='prospecto'))) \
+        .order_by('project__name')
 
-    # Get the total number of leads and clients for each project, with the conversion rate
-    project_data = Cliente.objects.values('project') \
-        .annotate(total_leads=Count('id_cliente', filter=Q(estatus='lead'))) \
-        .annotate(total_clients=Count('id_cliente', filter=Q(estatus='cliente'))) \
-        .annotate(conversion_rate=F('total_clients') / F('total_leads') * 100) \
-        .order_by('project')
-
-    # Prepare data for the new leads per month chart
-    labels = []
-    leads_data = []
-    for item in new_leads_per_month:
-        month_str = item['month'].strftime('%Y-%m')  # Format the month to YYYY-MM
-        labels.append(month_str)
-        leads_data.append(item['total_leads'])
-
-    # Prepare data for the conversion rate chart
-    conversion_labels = []
-    conversion_data = []
-    for item in project_data:
-        conversion_labels.append(item['project'])
-        conversion_data.append(item['conversion_rate'])
-
-    # Pass both query results and the chart data to the template
+    # Pass data to the template
     context = {
-        'new_leads_per_month': new_leads_per_month,
         'project_data': project_data,
-        'labels': labels,
-        'leads_data': leads_data,
-        'conversion_labels': conversion_labels,
-        'conversion_data': conversion_data,
+    }
+    return render(request, 'clientes/tabular_dashboard.html', context)
+
+
+#---------------------------------------------
+
+def apartment_status_report(request):
+    # Get the selected project and status from the GET parameters
+    selected_project_id = request.GET.get('project')
+    status = request.GET.get('status')
+
+    # Get all projects for the dropdown
+    projects = Project.objects.all()
+
+    # Query apartments if a project is selected, and filter by status if a status is selected
+    apartments = Apartment.objects.all()
+
+    # Apply project filter if a project is selected
+    if selected_project_id:
+        apartments = apartments.filter(project_id=selected_project_id)
+    
+    # Apply status filter if a status is selected
+    if status:
+        apartments = apartments.filter(status=status)
+
+    # Pass the filtered apartments and projects to the template
+    context = {
+        'apartments': apartments,
+        'projects': projects,
+        'selected_project_id': selected_project_id,
+        'status': status,
     }
 
-    return render(request, 'clientes/dashboard.html', context)
+    return render(request, 'clientes/status_report.html', context)
+
+
 
 #---------------------------------------------
 ### 2.5 Eventos ###
+#---------------------------------------------
+
+def event_list(request):
+    # Fetch events created by the logged-in user
+    events = Event.objects.filter(creator=request.user).order_by('-date')
+
+    return render(request, 'clientes/event_list.html', {'events': events})
+
+
 #---------------------------------------------
 
 @login_required
@@ -388,12 +446,33 @@ def create_event(request):
     return render(request, 'clientes/create_event.html', {'form': form})
 
 
-#------------------
+#---------------------------------------------
 
-def event_list(request):
-    # Fetch events created by the logged-in user
-    events = Event.objects.filter(creator=request.user).order_by('-date')
+def edit_event(request, id_event):
+    event = get_object_or_404(Event, id_event=id_event)
+    
+    if request.method == 'POST':
+        form = EventForm(request.POST, instance=event)
+        form.fields['invited_clients'].queryset = Cliente.objects.all()  # Ensure queryset is set for POST
+        if form.is_valid():
+            form.save()
+            return redirect('clientes:event_list')  # Redirect after saving
+    else:
+        form = EventForm(instance=event)
+        form.fields['invited_clients'].queryset = Cliente.objects.all()  # Ensure queryset is set for GET
+    
+    return render(request, 'clientes/edit_event.html', {'form': form, 'event': event})
 
-    return render(request, 'clientes/event_list.html', {'events': events})
 
 
+
+#---------------------------------------------
+
+def delete_event(request, id_event):
+    event = get_object_or_404(Event, id_event=id_event)
+    
+    if request.method == 'POST':
+        event.delete()
+        return redirect('clientes:event_list')  # Adjust to redirect to your event list or another relevant page
+    
+    return render(request, 'clientes/delete_event.html', {'event': event})

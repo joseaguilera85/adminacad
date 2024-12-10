@@ -3,7 +3,7 @@
    ============================== */
    :root {
     --primary-color: #4E342E; /* Coffee Brown color */
-    --secondary-color: #6F4E37; /* Darker Brown */
+    --secondary-color: #A67C52; /* Darker Brown */
     --background-color: #F5F5F5; /* Light background color */
     --text-color: #333333; /* Text color */
     --border-color: #DEE2E6; /* Border color */
@@ -16,7 +16,7 @@ body {
     background-color: var(--background-color);
     color: var(--text-color);
     font-family: var(--font-family);
-    font-size: 11pt;
+    font-size: 16pt;
 }
 
 h1, h2, h3 {
@@ -56,7 +56,7 @@ h1, h2, h3 {
 /* ==============================
    Custom Buttons
    ============================== */
-   .custom-brown-btn {
+.menu-brown-btn {
     background-color: var(--primary-color);
     color: #fff;
     border: 1px solid var(--primary-color);
@@ -70,6 +70,21 @@ h1, h2, h3 {
     margin-top: 5px;
     display: block; /* Ensure buttons are full-width */
 }
+
+.custom-brown-btn {
+    background-color: var(--primary-color);
+    color: #fff;
+    border: 1px solid var(--primary-color);
+    padding: 1rem 2rem; /* Increase padding for larger buttons */
+    border-radius: 20px;
+    font-size: 1.25rem; /* Increase font size */
+    transition: background-color 0.3s, border-color 0.3s;
+    text-decoration: none; 
+    margin-left: 5px; /* Add space to the left of each button */
+    margin-bottom: 10px;
+    margin-top: 5px;
+}
+
 
 .custom-brown-btn:hover {
     background-color: var(--secondary-color);
@@ -332,3 +347,30 @@ h5.display-2 {
     color: #333; /* Dark text color for readability */
     font-weight: bold; /* Make labels stand out */
 }
+
+/* ==============================
+   /* Custom card style
+   ============================== */
+
+   .card_interacciones {
+    background-color: #777777;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    width: 60%; /* Adjust the width here */
+    margin: 0 auto; /* Center the card horizontally */
+}
+
+.card_interacciones:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.card_interacciones-body {
+    padding: 15px;
+    padding-left: 20px; 
+}
+
+

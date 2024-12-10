@@ -1,0 +1,199 @@
+{% extends "pagos/admin_venta_menu.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block right_content %}
+<link rel="stylesheet" href="{% static 'pagos/css/apartment_detail.css' %}">
+
+<style>
+    /* Style for the image and interactive zones */
+    img {
+        width: auto; /* Ensure the image maintains its original width */
+        height: auto; /* Ensure the image maintains its original height */
+        max-width: none; /* Prevent the image from being resized */
+        display: block; /* Remove any spacing below the image */
+        position: relative;
+    }
+
+    svg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none; /* Ensure SVG doesn't interfere with clicks */
+    }
+
+    polygon {
+        fill: rgba(255, 0, 0, 0.2); /* Set the background of the polygon to red */
+        stroke: black; /* Set the border of the polygon to black */
+        stroke-width: 2;
+        transition: fill 0.3s ease; /* Smooth transition for color change */
+        pointer-events: all;
+    }
+
+    polygon.hovered {
+        fill: rgba(255, 100, 0, 0.5); /* Darker red on hover */
+    }
+
+    area {
+        cursor: pointer;
+    }
+
+    #coordinates {
+        margin-top: 20px;
+        font-size: 18px;
+    }
+</style>
+
+<h1>Interactive Image Map</h1>
+
+<div class="container mt-5">
+    <!-- Project Filter -->
+    <form method="GET" class="mb-3">
+        <div class="form-group">
+            <label for="project" class="form-label">Select Project:</label>
+            <select id="project" name="project" class="form-control" aria-label="Select Project" onchange="this.form.submit()">
+                <option value="">All Projects</option>
+                {% for project in projects %}
+                    <option value="{{ project.id }}" {% if project.id|stringformat:"s" == selected_project_id %}selected{% endif %}>
+                        {{ project.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+    </form>
+
+    <!-- The image with usemap attribute -->
+    <div id="image-container" style="position: relative;">
+        {% if project_plano %}
+            <img src="{{ project_plano }}" alt="Interactive Map" usemap="#image-map" id="interactive-map">
+        {% else %}
+            <p>No map available for the selected project.</p>
+        {% endif %}
+        <!-- SVG overlay for drawing polygons on the map -->
+        <svg></svg>
+    
+        <!-- Apartments Table -->
+        {% if apartments %}
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Apartment Number</th>
+                    <th>Status</th>
+                    <th>Puntos</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for apartment in apartments %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ apartment.number }}</td>
+                        <td>{{ apartment.status }}</td>
+                        <td>{{ apartment.points }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="text-center mt-4">No apartments available for the selected project.</p>
+    {% endif %}
+
+
+    
+    </div>
+
+    <!-- Define the clickable areas -->
+    <map name="image-map">
+        {% for zone in zones %}
+            <area 
+                target=""
+                alt="{{ zone.title }}"
+                title="{{ zone.title }}"
+                href="{{ zone.href }}"
+                coords="{{ zone.coords|join:', ' }}"
+                shape="{{ zone.shape }}">
+        {% endfor %}
+    </map>
+
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const svg = document.querySelector('svg');
+            const img = document.querySelector('img');
+            const mouseCoordinates = document.getElementById('mouse-coordinates');
+
+            const project_name = "{{ project_name|default:'' }}";
+            const zones = JSON.parse('{{ houses_json|escapejs }}');
+        
+
+            // Set SVG size to match the image after it loads
+            img.addEventListener('load', () => {
+                const rect = img.getBoundingClientRect();
+                svg.setAttribute('width', rect.width);
+                svg.setAttribute('height', rect.height);
+            });
+
+            // Iterate through the zones and create polygons in SVG
+            zones.forEach(zone => {
+                const { points, id, status } = zone;
+                const polygon = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+                polygon.setAttribute("points", points);
+                    // Determine fill color based on the house status
+                    let fillColor;
+                    switch (status) {
+                        case "disponible":
+                            fillColor = "rgba(21, 74, 8, 0.75)"; // Darker Green
+                            break;
+                        case "vendido":
+                            fillColor = "rgba(78, 52, 46, 0.75)"; // Coffee Brown
+                            break;
+                        case "apartado":
+                            fillColor = "rgba(233, 121, 30, 0.75)"; // Darker Orange
+                            break;
+                        default:
+                            fillColor = "rgba(47, 79, 79, 0.5)"; // Default Dark Slate Gray
+                            break;
+                    }
+
+                        // Set the initial fill color based on the status
+                        polygon.style.fill = fillColor;
+
+                        // Flag to track whether the polygon is highlighted
+                        let highlight = false;
+
+                        // Hover effect using the highlight flag
+                        polygon.addEventListener('mouseover', function(event) {
+                            highlight = true; // Set highlight to true on hover
+                            polygon.style.fill = "rgba(255, 0, 0, 0.4)"; // Highlight color (Yellow)
+                        });
+
+                        polygon.addEventListener('mouseout', function(event) {
+                            highlight = false; // Set highlight to false when mouseout
+                            polygon.style.fill = fillColor; // Restore the original color based on status
+                        });
+
+                        svg.appendChild(polygon);
+
+                        // Add click event to redirect to the specified URL
+                        polygon.addEventListener('click', function(event) {
+                            window.location.href = `/pagos/apartamento/${project_name}/${zone.id}/`;
+                            event.stopPropagation(); // Prevent event from propagating if necessary
+                        });
+                    });
+
+            // Mousemove event to track mouse coordinates
+            img.addEventListener('mousemove', (event) => {
+                const rect = img.getBoundingClientRect();
+                const x = event.clientX - rect.left;
+                const y = event.clientY - rect.top;
+
+                mouseCoordinates.textContent = `${Math.round(x)}, ${Math.round(y)}`;
+            });
+        });
+    </script>
+
+</div>
+{% endblock %}

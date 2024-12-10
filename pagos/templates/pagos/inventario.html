@@ -59,7 +59,7 @@
                     <td>{{ apartment.number }}</td>
                     <td>{{ apartment.get_status_display }}</td>
                     <td>
-                        <a href="{% url 'pagos:apartment_detail' apartment.number %}" 
+                        <a href="{% url 'pagos:apartment_detail' project.name apartment.number %}" 
                         class="btn btn-primary btn-sm">View Details</a>                         
                     </td>
                 </tr>

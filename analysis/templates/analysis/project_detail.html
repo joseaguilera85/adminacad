@@ -1,0 +1,20 @@
+{% extends "analysis/analysis_home.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block right_content %}
+<link rel="stylesheet" href="{% static 'analysis/css/analysis.css' %}">
+
+<h1 style="text-align: center;">{{ project_cost.project.name }}</h1>
+
+<!-- Links for Project Actions -->
+<div class="card-body vertical-buttons">
+    <a href="{% url 'analysis:edit_project_cost' project_cost.id %}" class="btn custom-brown-btn">Costos</a>
+    <a href="{% url 'analysis:edit_project_terreno' project_cost.id %}" class="btn custom-brown-btn">Terreno</a>
+    <a href="{% url 'analysis:edit_project_fechas' project_cost.id %}" class="btn custom-brown-btn">Fechas</a>
+    <a href="{% url 'analysis:edit_project_ventas' project_cost.id %}" class="btn custom-brown-btn">Ventas</a>
+</div>
+
+{% endblock %}
+
+

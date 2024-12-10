@@ -1,15 +1,22 @@
-{% extends "base_bootstrap.html" %}
+{% extends "analysis/analysis_home.html" %}
+{% load static %}
+{% load humanize %}
 
-{% block title %}Edit Project Cost{% endblock %}
+{% block right_content %}
+<link rel="stylesheet" href="{% static 'analysis/css/analysis.css' %}">
 
-{% block content %}
-    <h1>Edit Project: {{ project_cost.project.name }}</h1>  <!-- Use the single project_cost object -->
+<h1>Editar: {{ project_cost.project.name }}</h1>  <!-- Use the single project_cost object -->
 
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        
-        <button type="submit" class="btn btn-success">Save Changes</button>
-        <a href="{% url 'analysis:analysis_home' %}" class="btn btn-secondary">Cancel</a>
-    </form>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    
+    <!-- Save Changes Button -->
+    <button type="submit" class="btn btn-success btn-sm" aria-label="Save Changes">Save Changes</button>
+    <a href="{% url 'analysis:analysis_home' %}" class="btn btn-delete btn-sm" aria-label="Cancel">Cancel</a>
+    <a href="{% url 'analysis:project_detail' project_cost.id %}" class="btn custom-brown-btn btn-sm" aria-label="Return to Project Detail">Regresar</a>
+
+</form>
+
 {% endblock %}

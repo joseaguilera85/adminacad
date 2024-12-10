@@ -1,0 +1,332 @@
+/* ==============================
+   Global Variables
+   ============================== */
+   :root {
+    /* Color Palette */
+    --primary-color: #4E342E; /* Coffee Brown */
+    --secondary-color: #6F4E37; /* Darker Brown */
+    --background-color: #F5F5F5; /* Light Background */
+    --text-color: #333333; /* Text */
+    --muted-text-color: #7D7D7D; /* Muted Text */
+    --project-card-background: #D7CCC8; /* Light Coffee-Brown */
+    --project-card-shadow: rgba(0, 0, 0, 0.1); /* Shadow */
+
+    /* Typography */
+    --font-family: 'Roboto', sans-serif;
+    --font-size-small: 0.875rem; /* 14px */
+    --font-size-base: 1rem; /* 16px */
+    --font-size-large: 1.25rem; /* 24px */
+    --font-size-xlarge: 2rem; /* 32px */
+}
+
+/* ==============================
+   Global Styles
+   ============================== */
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    font-family: var(--font-family);
+    font-size: var(--font-size-large);
+}
+
+h1 {
+    font-size: var(--font-size-xlarge);
+    font-weight: bold;
+    text-align: left;
+}
+
+h2 {
+    font-size: 30px;
+    font-weight: bold;
+}
+
+h3 {
+    font-size: var(--font-size-small);
+    font-weight: bold;
+}
+
+.text-muted {
+    font-size: var(--font-size-small);
+    color: var(--muted-text-color);
+}
+
+.custom-brown-text {
+    color: var(--primary-color);
+    font-size: 2.25rem; /* 36px */
+}
+
+/* ==============================
+   Buttons Styles
+   ============================== */
+
+   .button-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Space between buttons */
+    justify-content: flex-start;
+}
+
+.button-container a {
+    text-decoration: none;
+    padding: 15px 30px; /* Increase padding for larger buttons */
+    font-size: 1.5rem; /* Larger font size */
+    text-align: center;
+    border-radius: 8px; /* Slightly larger border radius for a more prominent button */
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+
+/* General Button Styles */
+.custom-brown-btn, 
+.btn-sm, 
+.btn-success, 
+.btn-delete {
+    text-decoration: none;
+    border-radius: 4px;
+    padding: 0.25rem 0.5rem;
+    font-size: 1.25rem; /* Slightly smaller font size for small buttons */
+}
+
+/* Custom Brown Button */
+.custom-brown-btn {
+    background-color: var(--primary-color);
+    color: #fff;
+    border: 1px solid var(--primary-color);
+    padding: 0.25rem;
+    border-radius: 2px;
+    font-size: 0.875rem; /* Smaller font size */
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.custom-brown-btn:hover {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+    color: #fff;
+}
+
+/* Small Button */
+.btn-sm {
+    padding: 0.25rem;
+    font-size: 1.25rem; /* Slightly smaller font size */
+    border-radius: 4px; /* Less rounded for smaller buttons */
+}
+
+/* Success Button Override */
+.btn-success {
+    background-color: #28a745; /* Default Bootstrap green */
+    color: #fff;
+    border: 1px solid #28a745;
+}
+
+.btn-success:hover {
+    background-color: #218838; /* Darker green */
+    border-color: #218838;
+}
+
+/* Delete Button Override */
+.btn-delete {
+    background-color: #dc3545; /* Bootstrap red */
+    color: #fff;
+    border: 1px solid #dc3545;
+}
+
+.btn-delete:hover {
+    background-color: #c82333; /* Darker red */
+    border-color: #c82333;
+}
+
+/* ==============================
+   Project Card Spacing
+   ============================== */
+.project-card {
+    padding: 1.5rem; /* Increased padding for better visual hierarchy */
+    gap: 0.25rem; /* Space between elements inside the card */
+}
+
+.project-buttons .btn {
+    width: 100%; /* Buttons align neatly in the same width */
+}
+
+/* ==============================
+   Grid System
+   ============================== */
+.grid {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.grid-1 {
+    grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+    .grid-2 {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+/* ==============================
+   Containers
+   ============================== */
+.container {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+/* ==============================
+   Project Cards
+   ============================== */
+.project-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #ccc;
+    margin-bottom: 20px;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.project-image-container {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    margin: 0 auto;
+}
+
+.project-image {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.project-info {
+    flex-grow: 1;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.project-buttons {
+    flex-direction: row;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+}
+
+.project-buttons a {
+    text-decoration: none;
+    padding: 6px 6px;
+    border-radius: 5px;
+}
+
+.project-buttons a:last-child {
+    margin-bottom: 0;
+}
+
+/* ==============================
+   Custom Separator
+   ============================== */
+.custom-hr {
+    border: 0;
+    height: 2px;
+    background-color: var(--secondary-color);
+    margin: 5px;
+}
+
+/* ==============================
+   Table Styles
+   ============================== */
+.table {
+    width: 100%;
+    margin-top: 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+}
+
+.table-bordered {
+    border: 1px solid var(--border-color);
+}
+
+.table thead {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.table thead th {
+    padding: 0.75rem;
+    font-size: 1rem;
+    text-align: center;
+}
+
+.table tbody td {
+    padding: 0.75rem;
+    text-align: center;
+    font-size: 1.2rem;
+}
+
+.table tbody tr:hover {
+    background-color: #E3D0B8;
+}
+
+.table td a {
+    text-decoration: none;
+}
+
+.table td form {
+    display: inline-block;
+}
+
+/* ==============================
+   Form and Button Styling inside Table
+   ============================== */
+.danger-btn button {
+    background-color: #f44336;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 0.375rem 0.75rem;
+    font-size: var(--font-size-small);
+}
+
+.danger-btn button:hover {
+    background-color: #d32f2f; /* Darker Red on Hover */
+}
+
+/* ==============================
+   No Data Message
+   ============================== */
+.table tbody tr td[colspan="7"] {
+    text-align: center;
+    color: var(--muted-text-color);
+    font-size: var(--font-size-small);
+    padding: 1rem 0;
+}
+
+/* Container for the vertical buttons */
+.vertical-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center align the buttons horizontally */
+    gap: 20px; /* Space between buttons using gap for consistent vertical spacing */
+}
+
+/* Button styling */
+.vertical-buttons a {
+    width: 100%; /* Ensure the buttons take up the full width of the container */
+    max-width: 300px; /* Optional: Set a maximum width for the buttons */
+    padding: 15px 25px; /* Adjust button padding for better size */
+    text-align: center; /* Center align the text inside the buttons */
+    font-size: 1.5rem; /* Adjust font size for larger text */
+    border-radius: 8px; /* Optional: Slight rounding of button edges */
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+/* Styling for the buttons when inside a card */
+.card-body .btn {
+    padding: 20px 30px; /* Increase padding for bigger buttons */
+    font-size: 1.6rem; /* Larger text for better readability */
+    text-align: center; /* Center align the text inside the button */
+    border-radius: 8px; /* Optional: Slight rounding of button edges */
+    transition: background-color 0.3s, border-color 0.3s;
+    gap: 20px;
+}
